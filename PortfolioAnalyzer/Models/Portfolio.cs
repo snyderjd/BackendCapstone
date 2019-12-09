@@ -24,5 +24,6 @@ namespace PortfolioAnalyzer.Models
         public DateTime DateCreated { get; set; }
 
         public virtual ICollection<PortfolioSecurity> PortfolioSecurities { get; set; }
+        public string Notes { get; set; }
     }
 }

@@ -21,6 +21,7 @@ namespace PortfolioAnalyzer.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Ignore<Price>();
 
             // Customize the ASP.NET Identity model and override the defaults if needed
             // For example, you can rename the ASP.NET Identity table names and more

@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using PortfolioAnalyzer.Data;
 using PortfolioAnalyzer.Models;
+using PortfolioAnalyzer.Models.IEXModels;
 using PortfolioAnalyzer.Models.ViewModels;
 
 namespace PortfolioAnalyzer.Controllers
@@ -16,14 +20,20 @@ namespace PortfolioAnalyzer.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IConfiguration _config;
+        private readonly IHttpClientFactory _clientFactory;
 
-        public PortfoliosController(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public PortfoliosController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IConfiguration config, IHttpClientFactory clientFactory)
         {
             _context = context;
             _userManager = userManager;
+            _config = config;
+            _clientFactory = clientFactory;
         }
 
+        
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
+        private string GetToken() => _config.GetValue<string>("Tokens:IEXCloudSK");
 
         // GET: Portfolios
         public async Task<IActionResult> Index()
@@ -77,6 +87,10 @@ namespace PortfolioAnalyzer.Controllers
         public async Task<IActionResult> Create([Bind("Portfolio", "PortfolioSecurities")] PortfolioCreateViewModel viewModel)
         {
             var user = await GetCurrentUserAsync();
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+
+            
 
             // Get all the securities from the database
             var securities = _context.Securities;
@@ -88,7 +102,16 @@ namespace PortfolioAnalyzer.Controllers
                 if (!securities.Any(s => s.Ticker == ticker))
                 {
                     // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
-                    
+                    var request = new HttpRequestMessage(HttpMethod.Get,
+                        $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
+                    var response = await client.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        var json = await response.Content.ReadAsStreamAsync();
+                        var stockResponse = await JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+                    }
+
                 }
 
             }

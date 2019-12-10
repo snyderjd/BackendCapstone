@@ -78,6 +78,21 @@ namespace PortfolioAnalyzer.Controllers
         {
             var user = await GetCurrentUserAsync();
 
+            // Get all the securities from the database
+            var securities = _context.Securities;
+
+            // Iterate over the list of PortfolioSecurities entered by the user
+            foreach(PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            {
+                string ticker = ps.Security.Ticker;
+                if (!securities.Any(s => s.Ticker == ticker))
+                {
+                    // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
+                    
+                }
+
+            }
+
             ModelState.Remove("Portfolio.UserId");
 
             if (ModelState.IsValid)

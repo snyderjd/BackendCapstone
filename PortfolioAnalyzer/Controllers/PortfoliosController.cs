@@ -51,10 +51,19 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Portfolios/Create
         public IActionResult Create()
         {
+            // Create the viewModel
             var viewModel = new PortfolioCreateViewModel()
             {
                 Portfolio = new Portfolio(),
+                AssetClasses = _context.AssetClasses.ToList(),
+                PortfolioSecurities = new List<PortfolioSecurity>()
             };
+
+            // Add 10 PortfolioSecurity objects to the viewModel's list
+            for (int i = 0; i < 10; i++)
+            {
+                viewModel.PortfolioSecurities.Add(new PortfolioSecurity());
+            }
 
             return View(viewModel);
         }
@@ -62,22 +71,38 @@ namespace PortfolioAnalyzer.Controllers
         // POST: Portfolios/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Original Bind: [Bind("Id,Name,Description,UserId,DateCreated,Notes")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId,DateCreated,Notes")] Portfolio portfolio)
+        public async Task<IActionResult> Create([Bind("Portfolio", "PortfolioSecurities")] PortfolioCreateViewModel viewModel)
         {
             var user = await GetCurrentUserAsync();
 
-            ModelState.Remove("portfolio.UserId");
+            // Get all the securities from the database
+            var securities = _context.Securities;
+
+            // Iterate over the list of PortfolioSecurities entered by the user
+            foreach(PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            {
+                string ticker = ps.Security.Ticker;
+                if (!securities.Any(s => s.Ticker == ticker))
+                {
+                    // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
+                    
+                }
+
+            }
+
+            ModelState.Remove("Portfolio.UserId");
 
             if (ModelState.IsValid)
             {
-                portfolio.UserId = user.Id;
-                _context.Add(portfolio);
+                viewModel.Portfolio.UserId = user.Id;
+                _context.Add(viewModel.Portfolio);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(portfolio);
+            return View(viewModel);
         }
 
         // GET: Portfolios/Edit/5

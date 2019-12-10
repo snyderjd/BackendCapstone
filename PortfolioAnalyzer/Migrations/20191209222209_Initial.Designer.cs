@@ -10,7 +10,7 @@ using PortfolioAnalyzer.Data;
 namespace PortfolioAnalyzer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20191209205603_Initial")]
+    [Migration("20191209222209_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -233,7 +233,7 @@ namespace PortfolioAnalyzer.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-ffffffffffff",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0fe68724-3f66-48ad-819b-5afc3b8b8b31",
+                            ConcurrencyStamp = "51854c68-2ec5-4e98-8b64-01c68a8d661e",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             FirstName = "Admin",
@@ -241,7 +241,7 @@ namespace PortfolioAnalyzer.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN@ADMIN.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEJs4NuVDssZOjeHuxT1Pq2a6CRfQ3Cy+F6Bk3RS/Rl+UxYW7f0Um49/TMy+20w0TDQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEIsCfrOBcw70teTeuKT1vFtKGy+c0pGycXQxWnY0no57OLxXqjyg1AxnG1s9G1ZVhQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794577",
                             TwoFactorEnabled = false,
@@ -251,7 +251,7 @@ namespace PortfolioAnalyzer.Migrations
                         {
                             Id = "00000000-ffff-ffff-ffff-fffffffffff1",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "8b7ab4b5-9ad7-4cd4-a1bd-6c5923d0c292",
+                            ConcurrencyStamp = "e7249e85-da0f-488a-89d2-819b5cd011a1",
                             Email = "joe@gmail.com",
                             EmailConfirmed = true,
                             FirstName = "Joe",
@@ -259,7 +259,7 @@ namespace PortfolioAnalyzer.Migrations
                             LockoutEnabled = false,
                             NormalizedEmail = "JOE@GMAIL.COM",
                             NormalizedUserName = "JOE@GMAIL.COM",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPqucIB3GuaC6mNHlznvVcz94focOK1P5MI47m13yIUndpE/1TUZDuRDtGV/sE5NhQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEG5ZZ0XLhiLdqE7x2vZ3y5y2pIdd3FTMrDflyom3dm6bJLzOR+ZXFOY/QW/GNHmEiQ==",
                             PhoneNumberConfirmed = false,
                             SecurityStamp = "7f434309-a4d9-48e9-9ebb-8803db794578",
                             TwoFactorEnabled = false,

@@ -90,8 +90,6 @@ namespace PortfolioAnalyzer.Controllers
             string token = GetToken();
             var client = _clientFactory.CreateClient();
 
-            
-
             // Get all the securities from the database
             var securities = _context.Securities;
 
@@ -108,24 +106,50 @@ namespace PortfolioAnalyzer.Controllers
 
                     if (response.IsSuccessStatusCode)
                     {
+                        // Convert the response to an object and save the new security to the database
                         var json = await response.Content.ReadAsStreamAsync();
                         var stockResponse = await JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+                        //SaveSecurity(stockResponse);
+                        Security newSecurity = new Security
+                        {
+                            Name = stockResponse.CompanyName,
+                            Ticker = stockResponse.Ticker,
+                            Description = stockResponse.Description
+                        };
+
+                        _context.Securities.Add(newSecurity);
+                        await _context.SaveChangesAsync();
                     }
-
                 }
-
             }
+            // Now all the securities should be in the DB. Get a new reference to them and iterate over the list of portfolio securities again
 
-            ModelState.Remove("Portfolio.UserId");
+            var updatedSecurities = _context.Securities;
 
-            if (ModelState.IsValid)
+            // Save the new portfolio to the database and get a reference to its Id
+            viewModel.Portfolio.UserId = user.Id;
+            _context.Add(viewModel.Portfolio);
+            await _context.SaveChangesAsync();
+            int portfolioId = viewModel.Portfolio.Id;
+
+            // iterate over PortfolioSecurities again and enter them into the database with their properties
+            foreach(PortfolioSecurity ps in viewModel.PortfolioSecurities)
             {
-                viewModel.Portfolio.UserId = user.Id;
-                _context.Add(viewModel.Portfolio);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                Security matchingSecurity = updatedSecurities.First(s => s.Ticker == ps.Security.Ticker);
+
+                PortfolioSecurity newPS = new PortfolioSecurity
+                {
+                    PortfolioId = portfolioId,
+                    SecurityId = matchingSecurity.Id,
+                    Weight = ps.Weight,
+                    AssetClassId = ps.AssetClassId
+                };
+
+                _context.Add(newPS);
             }
-            return View(viewModel);
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Portfolios/Edit/5
@@ -203,5 +227,18 @@ namespace PortfolioAnalyzer.Controllers
         {
             return _context.Portfolios.Any(e => e.Id == id);
         }
+
+        //private async void SaveSecurity(IEXSecurity security)
+        //{
+        //    Security newSecurity = new Security
+        //    {
+        //        Name = security.CompanyName,
+        //        Ticker = security.Ticker,
+        //        Description = security.Description
+        //    };
+
+        //    _context.Securities.Add(newSecurity);
+        //    await _context.SaveChangesAsync();
+        //}
     }
 }

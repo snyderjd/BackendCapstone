@@ -17,8 +17,8 @@ namespace PortfolioAnalyzer.Models.ViewModels
                 return AssetClasses.Select(a => new SelectListItem(a.Name, a.Id.ToString())).ToList();
             }
         }
-        public List<PortfolioSecurity> PortfolioSecurities { get; set; }
         public Portfolio Portfolio { get; set; }
+        public List<PortfolioSecurity> PortfolioSecurities { get; set; }
 
     }
 }

@@ -71,22 +71,23 @@ namespace PortfolioAnalyzer.Controllers
         // POST: Portfolios/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
+        // Original Bind: [Bind("Id,Name,Description,UserId,DateCreated,Notes")]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId,DateCreated,Notes")] Portfolio portfolio)
+        public async Task<IActionResult> Create([Bind("Portfolio", "PortfolioSecurities")] PortfolioCreateViewModel viewModel)
         {
             var user = await GetCurrentUserAsync();
 
-            ModelState.Remove("portfolio.UserId");
+            ModelState.Remove("Portfolio.UserId");
 
             if (ModelState.IsValid)
             {
-                portfolio.UserId = user.Id;
-                _context.Add(portfolio);
+                viewModel.Portfolio.UserId = user.Id;
+                _context.Add(viewModel.Portfolio);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(portfolio);
+            return View(viewModel);
         }
 
         // GET: Portfolios/Edit/5

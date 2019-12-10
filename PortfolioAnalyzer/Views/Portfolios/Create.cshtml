@@ -1,4 +1,5 @@
-﻿@model PortfolioAnalyzer.Models.Portfolio
+﻿@model PortfolioAnalyzer.Models.ViewModels.PortfolioCreateViewModel
+
 
 @{
     ViewData["Title"] = "Create";
@@ -13,23 +14,22 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+                <label asp-for="Portfolio.Name" class="control-label"></label>
+                <input asp-for="Portfolio.Name" class="form-control" />
+                <span asp-validation-for="Portfolio.Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
-                <span asp-validation-for="Description" class="text-danger"></span>
+                <label asp-for="Portfolio.Description" class="control-label"></label>
+                <input asp-for="Portfolio.Description" class="form-control" />
+                <span asp-validation-for="Portfolio.Description" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UserId" class="control-label"></label>
-                <select asp-for="UserId" class ="form-control" asp-items="ViewBag.UserId"></select>
+                <label asp-for="Portfolio.Notes" class="control-label"></label>
+                <input asp-for="Portfolio.Notes" class="form-control" />
+                <span asp-validation-for="Portfolio.Notes" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Notes" class="control-label"></label>
-                <input asp-for="Notes" class="form-control" />
-                <span asp-validation-for="Notes" class="text-danger"></span>
+            <div>
+                
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
@@ -45,3 +45,4 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using PortfolioAnalyzer.Data;
 using PortfolioAnalyzer.Models;
+using PortfolioAnalyzer.Models.ViewModels;
 
 namespace PortfolioAnalyzer.Controllers
 {
@@ -50,8 +51,12 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Portfolios/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
+            var viewModel = new PortfolioCreateViewModel()
+            {
+                Portfolio = new Portfolio(),
+            };
+
+            return View(viewModel);
         }
 
         // POST: Portfolios/Create
@@ -61,13 +66,17 @@ namespace PortfolioAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId,DateCreated,Notes")] Portfolio portfolio)
         {
+            var user = await GetCurrentUserAsync();
+
+            ModelState.Remove("portfolio.UserId");
+
             if (ModelState.IsValid)
             {
+                portfolio.UserId = user.Id;
                 _context.Add(portfolio);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", portfolio.UserId);
             return View(portfolio);
         }
 

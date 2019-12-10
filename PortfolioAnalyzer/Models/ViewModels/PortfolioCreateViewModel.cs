@@ -8,10 +8,16 @@ namespace PortfolioAnalyzer.Models.ViewModels
 {
     public class PortfolioCreateViewModel
     {
-        public List<string> Tickers { get; set; }
-        public List<int> Weights { get; set; }
-        public List<SelectListItem> AssetClasses { get; set; }
-        public List<int> AssetClassIds { get; set; }
+        public List<AssetClass> AssetClasses { get; set; }
+        public List<SelectListItem> AssetClassOptions
+        {
+            get
+            {
+                if (AssetClasses == null) return null;
+                return AssetClasses.Select(a => new SelectListItem(a.Name, a.Id.ToString())).ToList();
+            }
+        }
+        public List<PortfolioSecurity> PortfolioSecurities { get; set; }
         public Portfolio Portfolio { get; set; }
 
     }

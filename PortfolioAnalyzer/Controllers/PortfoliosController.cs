@@ -51,10 +51,19 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Portfolios/Create
         public IActionResult Create()
         {
+            // Create the viewModel
             var viewModel = new PortfolioCreateViewModel()
             {
                 Portfolio = new Portfolio(),
+                AssetClasses = _context.AssetClasses.ToList(),
+                PortfolioSecurities = new List<PortfolioSecurity>()
             };
+
+            // Add 10 PortfolioSecurity objects to the viewModel's list
+            for (int i = 0; i < 10; i++)
+            {
+                viewModel.PortfolioSecurities.Add(new PortfolioSecurity());
+            }
 
             return View(viewModel);
         }

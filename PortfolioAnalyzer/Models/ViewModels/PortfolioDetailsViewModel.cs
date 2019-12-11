@@ -12,7 +12,7 @@ namespace PortfolioAnalyzer.Models.ViewModels
         public Portfolio Portfolio { get; set; }
         public Dictionary<DateTime, decimal> PortfolioValues { get; set; } = new Dictionary<DateTime, decimal>();
         public Dictionary<DateTime, decimal> MonthlyReturns { get; set; } = new Dictionary<DateTime, decimal>();
-        public Dictionary<DateTime, decimal> CumulativeReturns { get; set; } = new Dictionary<DateTime, decimal>();
+        public SortedDictionary<DateTime, decimal> CumulativeReturns { get; set; } = new SortedDictionary<DateTime, decimal>();
         public decimal Return { get; set; }
         public decimal CAGR { get; set; }
         public decimal StdDeviation { get; set; }

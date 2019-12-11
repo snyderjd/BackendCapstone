@@ -72,12 +72,12 @@ namespace PortfolioAnalyzer.Controllers
                 // Iterate over all the dates returned for prices and make entries in Dictionaries
                 foreach(DateTime date in dates)
                 {
-                    viewModel.PortfolioValues[date] = 0;
+                    viewModel.PortfolioValues[date] = 100_000;
                     viewModel.MonthlyReturns[date] = 0;
                     viewModel.CumulativeReturns[date] = 0;
                 }
 
-                // Iterate over all the PortfolioSecurities, calculate the weighted monthly return for each security and add it to the dictionary
+                // Iterate over all the PortfolioSecurities, calculate the weighted monthly return and cumulative return for each security and add it to the dictionary
                 decimal monthlyReturn = 0;
                 decimal cumulativeReturn = 0;
                 foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
@@ -93,7 +93,19 @@ namespace PortfolioAnalyzer.Controllers
                             viewModel.CumulativeReturns[ps.Prices[i].Date] += cumulativeReturn * ps.Weight / 100;
                         }
                     }
+
+
                 }
+
+                // Iterate over the viewModel's CumulativeReturns dictionary and update the PortfolioValues dictionary with the appropriate value
+                //DateTime firstDate = viewModel.PortfolioValues.Keys.First();
+                //viewModel.PortfolioValues[firstDate] = 100_000;
+                
+                foreach(KeyValuePair<DateTime, decimal> kvp in viewModel.CumulativeReturns)
+                {
+                    viewModel.PortfolioValues[kvp.Key] = 100_000 * (1 + kvp.Value);
+                }
+
             }
 
             if (viewModel.Portfolio == null) return NotFound();

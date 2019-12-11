@@ -45,17 +45,25 @@ namespace PortfolioAnalyzer.Controllers
         }
 
         // GET: Portfolios/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string timePeriod)
         {
+            var viewModel = new PortfolioDetailsViewModel();
+
+            viewModel.TimePeriod = timePeriod;
+
             if (id == null) return NotFound();
 
-            var portfolio = await _context.Portfolios
+            viewModel.Portfolio = await _context.Portfolios
                 .Include(p => p.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(p => p.Security)
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(p => p.AssetClass)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
-            if (portfolio == null) return NotFound();
+            if (viewModel.Portfolio == null) return NotFound();
 
-            return View(portfolio);
+            return View(viewModel);
         }
 
         // GET: Portfolios/Create

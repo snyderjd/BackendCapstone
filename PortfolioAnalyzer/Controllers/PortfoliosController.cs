@@ -75,6 +75,19 @@ namespace PortfolioAnalyzer.Controllers
                     viewModel.PortfolioValues[date] = 0;
                     viewModel.MonthlyReturns[date] = 0;
                 }
+
+                // Iterate over all the PortfolioSecurities, calculate the weighted monthly return for each security and add it to the dictionary
+                foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
+                {
+                    for (int i = 0; i < ps.Prices.Count(); i++)
+                    {
+                        if (i != 0)
+                        {
+                            decimal monthlyReturn = (ps.Prices[i].AdjClose / ps.Prices[i - 1].AdjClose) - 1;
+                            viewModel.MonthlyReturns[ps.Prices[i].Date] += monthlyReturn * ps.Weight / 100;
+                        }
+                    }
+                }
             }
 
             if (viewModel.Portfolio == null) return NotFound();

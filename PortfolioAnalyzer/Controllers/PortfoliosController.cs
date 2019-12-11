@@ -61,6 +61,12 @@ namespace PortfolioAnalyzer.Controllers
                     .ThenInclude(p => p.AssetClass)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
+            // Get the prices for all the securities in the portfolio
+            if (timePeriod != null)
+            {
+                viewModel.Portfolio.PortfolioSecurities = await GetPrices(viewModel);
+            }
+
             if (viewModel.Portfolio == null) return NotFound();
 
             return View(viewModel);
@@ -235,6 +241,67 @@ namespace PortfolioAnalyzer.Controllers
         {
             return _context.Portfolios.Any(e => e.Id == id);
         }
+
+        // Gets the prices for all of the securities in a portfolio from IEX Cloud
+        private async Task<ICollection<PortfolioSecurity>> GetPrices(PortfolioDetailsViewModel viewModel)
+        {
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+            var timePeriod = viewModel.TimePeriod;
+
+            foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://cloud.iexapis.com/stable/stock/{ps.Security.Ticker}/chart/{timePeriod}/?chartCloseOnly=true&chartInterval=21&token={token}");
+                var response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Convert the response into price objects and save as a list to the PS's List<Price>
+                    var json = await response.Content.ReadAsStreamAsync();
+                    IEXPrice[] IEXPrices = await JsonSerializer.DeserializeAsync<IEXPrice[]>(json);
+                    foreach(IEXPrice p in IEXPrices)
+                    {
+                        ps.Prices.Add(new Price
+                        {
+                            Date = p.Date,
+                            AdjClose = p.Close
+                        });
+                    }
+                }
+            }
+
+            return viewModel.Portfolio.PortfolioSecurities;
+        }
+
+        //foreach(PortfolioSecurity ps in viewModel.PortfolioSecurities)
+        //    {
+        //        string ticker = ps.Security.Ticker;
+        //        if (!securities.Any(s => s.Ticker == ticker))
+        //        {
+        //            // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
+        //            var request = new HttpRequestMessage(HttpMethod.Get,
+        //                $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
+        //            var response = await client.SendAsync(request);
+
+        //            if (response.IsSuccessStatusCode)
+        //            {
+        //                // Convert the response to an object and save the new security to the database
+        //                var json = await response.Content.ReadAsStreamAsync();
+        //                var stockResponse = await JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+        //                //SaveSecurity(stockResponse);
+        //                Security newSecurity = new Security
+        //                {
+        //                    Name = stockResponse.CompanyName,
+        //                    Ticker = stockResponse.Ticker,
+        //                    Description = stockResponse.Description
+        //                };
+
+        //                _context.Securities.Add(newSecurity);
+        //                await _context.SaveChangesAsync();
+        //            }
+        //        }
+        //    }
 
         //private async void SaveSecurity(IEXSecurity security)
         //{

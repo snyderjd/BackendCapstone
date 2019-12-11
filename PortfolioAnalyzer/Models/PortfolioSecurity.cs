@@ -20,6 +20,6 @@ namespace PortfolioAnalyzer.Models
         [Required]
         public int AssetClassId { get; set; }
         public AssetClass AssetClass { get; set; }
-        public List<Price> Prices { get; set; }
+        public List<Price> Prices { get; set; } = new List<Price>();
     }
 }

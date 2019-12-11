@@ -65,6 +65,16 @@ namespace PortfolioAnalyzer.Controllers
             if (timePeriod != null)
             {
                 viewModel.Portfolio.PortfolioSecurities = await GetPrices(viewModel);
+
+                List<DateTime> dates = viewModel.Portfolio.PortfolioSecurities.FirstOrDefault().Prices
+                    .Select(p => p.Date).ToList();
+                
+                // Iterate over all the dates returned for prices and make entries in Dictionaries
+                foreach(DateTime date in dates)
+                {
+                    viewModel.PortfolioValues[date] = 0;
+                    viewModel.MonthlyReturns[date] = 0;
+                }
             }
 
             if (viewModel.Portfolio == null) return NotFound();
@@ -259,7 +269,7 @@ namespace PortfolioAnalyzer.Controllers
                 {
                     // Convert the response into price objects and save as a list to the PS's List<Price>
                     var json = await response.Content.ReadAsStreamAsync();
-                    IEXPrice[] IEXPrices = await JsonSerializer.DeserializeAsync<IEXPrice[]>(json);
+                    List<IEXPrice> IEXPrices = await JsonSerializer.DeserializeAsync<List<IEXPrice>>(json);
                     foreach(IEXPrice p in IEXPrices)
                     {
                         ps.Prices.Add(new Price

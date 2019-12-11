@@ -10,6 +10,8 @@ namespace PortfolioAnalyzer.Models.ViewModels
     public class PortfolioDetailsViewModel
     {
         public Portfolio Portfolio { get; set; }
+        public Dictionary<DateTime, decimal> PortfolioValues { get; set; } = new Dictionary<DateTime, decimal>();
+        public Dictionary<DateTime, decimal> MonthlyReturns { get; set; } = new Dictionary<DateTime, decimal>();
         public decimal Return { get; set; }
         public decimal CAGR { get; set; }
         public decimal StdDeviation { get; set; }

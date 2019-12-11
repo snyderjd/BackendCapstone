@@ -106,6 +106,16 @@ namespace PortfolioAnalyzer.Controllers
                     viewModel.PortfolioValues[kvp.Key] = 100_000 * (1 + kvp.Value);
                 }
 
+                decimal begValue = viewModel.PortfolioValues.First().Value;
+                decimal endValue = viewModel.PortfolioValues.Last().Value;
+                viewModel.Return = (endValue / begValue) - 1 * 100;
+
+                decimal numYears = dates.Count() / 12;
+
+                viewModel.CAGR = (decimal)(Math.Pow((double)(endValue / begValue), (double)(1 / numYears))) - 1;
+
+
+                return View(viewModel);
             }
 
             if (viewModel.Portfolio == null) return NotFound();

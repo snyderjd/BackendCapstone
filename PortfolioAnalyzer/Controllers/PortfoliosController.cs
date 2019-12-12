@@ -108,12 +108,18 @@ namespace PortfolioAnalyzer.Controllers
 
                 decimal begValue = viewModel.PortfolioValues.First().Value;
                 decimal endValue = viewModel.PortfolioValues.Last().Value;
-                viewModel.Return = (endValue / begValue) - 1 * 100;
+                viewModel.Return = ((endValue / begValue) - 1) * 100;
 
                 decimal numYears = dates.Count() / 12;
 
                 viewModel.CAGR = (decimal)(Math.Pow((double)(endValue / begValue), (double)(1 / numYears))) - 1;
-
+                // Calculate the StdDeviation
+                List<decimal> monthlyReturns = viewModel.MonthlyReturns.Values.ToList();
+                // Remove the first value since the 1st period has no return
+                monthlyReturns.Remove(monthlyReturns[0]); 
+                decimal monthlyStdDev = StdDev(monthlyReturns);
+                // Get estimated annualized StdDev
+                viewModel.StdDeviation = monthlyStdDev * (decimal)Math.Sqrt(12);
 
                 return View(viewModel);
             }
@@ -325,34 +331,34 @@ namespace PortfolioAnalyzer.Controllers
             return viewModel.Portfolio.PortfolioSecurities;
         }
 
-        //foreach(PortfolioSecurity ps in viewModel.PortfolioSecurities)
+
+        // Take in a list of numbers and return the standard deviation
+        private decimal StdDev(List<decimal> nums)
+        {
+            double stdDeviation = 0;
+            // Get the sum of the squared differences
+            double average = (double)nums.Average();
+
+            List<double> squaredDiffs = nums.Select(n => Math.Pow(((double)n - average), 2)).ToList();
+            double sumSquaredDiffs = squaredDiffs.Sum();
+            stdDeviation = Math.Sqrt(sumSquaredDiffs / (nums.Count() - 1));
+
+            return (decimal)stdDeviation;
+        }
+        //private double CalculateStdDev(IEnumerable<double> values)
+        //{
+        //    double ret = 0;
+        //    if (values.Count() > 0)
         //    {
-        //        string ticker = ps.Security.Ticker;
-        //        if (!securities.Any(s => s.Ticker == ticker))
-        //        {
-        //            // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
-        //            var request = new HttpRequestMessage(HttpMethod.Get,
-        //                $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
-        //            var response = await client.SendAsync(request);
-
-        //            if (response.IsSuccessStatusCode)
-        //            {
-        //                // Convert the response to an object and save the new security to the database
-        //                var json = await response.Content.ReadAsStreamAsync();
-        //                var stockResponse = await JsonSerializer.DeserializeAsync<IEXSecurity>(json);
-        //                //SaveSecurity(stockResponse);
-        //                Security newSecurity = new Security
-        //                {
-        //                    Name = stockResponse.CompanyName,
-        //                    Ticker = stockResponse.Ticker,
-        //                    Description = stockResponse.Description
-        //                };
-
-        //                _context.Securities.Add(newSecurity);
-        //                await _context.SaveChangesAsync();
-        //            }
-        //        }
+        //        //Compute the Average      
+        //        double avg = values.Average();
+        //        //Perform the Sum of (value-avg)_2_2      
+        //        double sum = values.Sum(d => Math.Pow(d - avg, 2));
+        //        //Put it all together      
+        //        ret _= Math.Sqrt((sum) / (values.Count() - 1));
         //    }
+        //    return ret;
+        //}
 
         //private async void SaveSecurity(IEXSecurity security)
         //{

@@ -108,7 +108,7 @@ namespace PortfolioAnalyzer.Controllers
 
                 decimal begValue = viewModel.PortfolioValues.First().Value;
                 decimal endValue = viewModel.PortfolioValues.Last().Value;
-                viewModel.Return = (endValue / begValue) - 1 * 100;
+                viewModel.Return = ((endValue / begValue) - 1) * 100;
 
                 decimal numYears = dates.Count() / 12;
 

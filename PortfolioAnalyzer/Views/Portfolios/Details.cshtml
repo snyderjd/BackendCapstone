@@ -6,69 +6,105 @@
 
 <h1>@Html.DisplayFor(model => model.Portfolio.Name)</h1>
 
-<div>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Portfolio.DateCreated)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Portfolio.DateCreated)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Portfolio.Description)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Portfolio.Description)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Portfolio.Notes)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Portfolio.Notes)
-        </dd>
-    </dl>
-</div>
-<div>
-    <h4>Securities</h4>
-    <hr />
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Ticker</th>
-                <th>Name</th>
-                <th>Weight</th>
-                <th>Asset Class</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (PortfolioSecurity ps in @Model.Portfolio.PortfolioSecurities)
-            {
+<div class="d-flex">
+    <div>
+        <h4>Details</h4>
+        <hr />
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Portfolio.DateCreated)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Portfolio.DateCreated)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Portfolio.Description)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Portfolio.Description)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Portfolio.Notes)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Portfolio.Notes)
+            </dd>
+        </dl>
+        <div>
+            <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id">Edit</a> |
+            <a asp-action="Index">Back to List</a>
+        </div>
+    </div>
+    <div>
+        <h4>Securities</h4>
+        <hr />
+        <table class="table">
+            <thead>
                 <tr>
-                    <td>@Html.DisplayFor(modelItem => ps.Security.Name)</td>
-                    <td>@Html.DisplayFor(modelItem => ps.Security.Ticker)</td>
-                    <td>@Html.DisplayFor(modelItem => ps.Weight) %</td>
-                    <td>@Html.DisplayFor(modelItem => ps.AssetClass.Name)</td>
-                    <td>
-                        <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">Details</a>
-                    </td>
+                    <th>Ticker</th>
+                    <th>Name</th>
+                    <th>Weight</th>
+                    <th>Asset Class</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (PortfolioSecurity ps in @Model.Portfolio.PortfolioSecurities)
+                {
+                    <tr>
+                        <td>@Html.DisplayFor(modelItem => ps.Security.Ticker)</td>
+                        <td>@Html.DisplayFor(modelItem => ps.Security.Name)</td>
+                        <td>@Html.DisplayFor(modelItem => ps.Weight) %</td>
+                        <td>@Html.DisplayFor(modelItem => ps.AssetClass.Name)</td>
+                        <td>
+                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">Details</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 </div>
 
 
 <div>
     @*<div class="form-group">
-        <label asp-for="@Model.TimePeriodOptions" class="control-label"></label>
-        <select asp-for="@Model.TimePeriod" class="form-control" asp-items="@Model.TimePeriodOptions"></select>
-    </div>*@
-    @Html.ActionLink("1 Year", "Details", new { timePeriod = "1y" })
-    @Html.ActionLink("2 Years", "Details", new { timePeriod = "2y" })
-    @Html.ActionLink("5 Years", "Details", new { timePeriod = "5y" })
+            <label asp-for="@Model.TimePeriodOptions" class="control-label"></label>
+            <select asp-for="@Model.TimePeriod" class="form-control" asp-items="@Model.TimePeriodOptions"></select>
+        </div>*@
+    @Html.ActionLink("1 Year", "Details", new { timePeriod = "1y" }) |
+    @Html.ActionLink("2 Years", "Details", new { timePeriod = "2y" }) |
+    @Html.ActionLink("5 Years", "Details", new { timePeriod = "5y" }) |
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+
+@if (Model.TimePeriod != null)
+{
+    <div>
+        <div>
+            <h4>Analysis</h4>
+            <hr />
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Start Date</th>
+                        <th>End Date</th>
+                        <th>Period Return</th>
+                        <th>CAGR</th>
+                        <th>Standard Deviation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Html.DisplayFor(model => model.StartDate)</td>
+                        <td>@Html.DisplayFor(model => model.EndDate)</td>
+                        <td>@Html.DisplayFor(model => model.Return) %</td>
+                        <td>@Html.DisplayFor(model => model.CAGR) %</td>
+                        <td>@Html.DisplayFor(model => model.StdDeviation) %</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+}
+
+

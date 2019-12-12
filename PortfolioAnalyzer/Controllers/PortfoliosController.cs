@@ -94,7 +94,6 @@ namespace PortfolioAnalyzer.Controllers
                         }
                     }
 
-
                 }
 
                 // Iterate over the viewModel's CumulativeReturns dictionary and update the PortfolioValues dictionary with the appropriate value
@@ -113,6 +112,7 @@ namespace PortfolioAnalyzer.Controllers
                 decimal numYears = dates.Count() / 12;
 
                 viewModel.CAGR = (decimal)(Math.Pow((double)(endValue / begValue), (double)(1 / numYears))) - 1;
+                viewModel.CAGR = viewModel.CAGR * 100;
                 // Calculate the StdDeviation
                 List<decimal> monthlyReturns = viewModel.MonthlyReturns.Values.ToList();
                 // Remove the first value since the 1st period has no return
@@ -120,6 +120,11 @@ namespace PortfolioAnalyzer.Controllers
                 decimal monthlyStdDev = StdDev(monthlyReturns);
                 // Get estimated annualized StdDev
                 viewModel.StdDeviation = monthlyStdDev * (decimal)Math.Sqrt(12);
+                viewModel.StdDeviation = viewModel.StdDeviation * 100;
+
+                // Set dates
+                viewModel.StartDate = viewModel.PortfolioValues.First().Key;
+                viewModel.EndDate = viewModel.PortfolioValues.Last().Key;
 
                 return View(viewModel);
             }

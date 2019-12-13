@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json;
 using PortfolioAnalyzer.Data;
 using PortfolioAnalyzer.Models;
 using PortfolioAnalyzer.Models.IEXModels;
@@ -126,6 +127,10 @@ namespace PortfolioAnalyzer.Controllers
                 viewModel.StartDate = viewModel.PortfolioValues.First().Key;
                 viewModel.EndDate = viewModel.PortfolioValues.Last().Key;
 
+                // Convert portfolio values to JSON and set in the viewModel
+                viewModel.ChartData = JsonConvert.SerializeObject(viewModel.PortfolioValues);
+
+
                 return View(viewModel);
             }
 
@@ -184,7 +189,7 @@ namespace PortfolioAnalyzer.Controllers
                     {
                         // Convert the response to an object and save the new security to the database
                         var json = await response.Content.ReadAsStreamAsync();
-                        var stockResponse = await JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+                        var stockResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXSecurity>(json);
                         //SaveSecurity(stockResponse);
                         Security newSecurity = new Security
                         {
@@ -321,7 +326,7 @@ namespace PortfolioAnalyzer.Controllers
                 {
                     // Convert the response into price objects and save as a list to the PS's List<Price>
                     var json = await response.Content.ReadAsStreamAsync();
-                    List<IEXPrice> IEXPrices = await JsonSerializer.DeserializeAsync<List<IEXPrice>>(json);
+                    List<IEXPrice> IEXPrices = await System.Text.Json.JsonSerializer.DeserializeAsync<List<IEXPrice>>(json);
                     foreach(IEXPrice p in IEXPrices)
                     {
                         ps.Prices.Add(new Price

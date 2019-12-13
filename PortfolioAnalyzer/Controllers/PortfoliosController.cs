@@ -362,6 +362,10 @@ namespace PortfolioAnalyzer.Controllers
 
             var portfolio = await _context.Portfolios
                 .Include(p => p.User)
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(ps => ps.Security)
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(ps => ps.AssetClass)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
             if (portfolio == null) return NotFound();
@@ -375,6 +379,13 @@ namespace PortfolioAnalyzer.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var portfolio = await _context.Portfolios.FindAsync(id);
+
+            // Get all the portfolio's PortfolioSecurities
+            var portfolioSecurities = await _context.PortfolioSecurities
+                .Where(ps => ps.PortfolioId == id).ToListAsync();
+
+            portfolioSecurities.ForEach(ps => _context.PortfolioSecurities.Remove(ps));
+
             _context.Portfolios.Remove(portfolio);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

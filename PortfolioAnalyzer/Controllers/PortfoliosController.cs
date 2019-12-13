@@ -238,12 +238,37 @@ namespace PortfolioAnalyzer.Controllers
         {
             if (id == null) return NotFound();
 
-            var portfolio = await _context.Portfolios.FindAsync(id);
+            // Get the portfolio and include navigation properties
+            var portfolio = await _context.Portfolios
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(p => p.Security)
+                .Include(p => p.PortfolioSecurities)
+                    .ThenInclude(p => p.AssetClass)
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            var viewModel = new PortfolioEditViewModel()
+            {
+                Portfolio = portfolio,
+                AssetClasses = _context.AssetClasses.ToList(),
+                PortfolioSecurities = new List<PortfolioSecurity>()
+            };
+
+            // Assign the current PortfolioSecurities to the viewModel's list of PortfolioSecurities
+            foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
+            {
+                viewModel.PortfolioSecurities.Add(ps);
+            }
+
+            // Add 10 more PortfolioSecurity objects to the viewModel's list
+            for (int i = 0; i < 10; i++)
+            {
+                viewModel.PortfolioSecurities.Add(new PortfolioSecurity());
+            }
 
             if (portfolio == null) return NotFound();
 
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", portfolio.UserId);
-            return View(portfolio);
+            return View(viewModel);
         }
 
         // POST: Portfolios/Edit/5

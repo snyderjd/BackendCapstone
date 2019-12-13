@@ -276,32 +276,83 @@ namespace PortfolioAnalyzer.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UserId,DateCreated,Notes")] Portfolio portfolio)
+        public async Task<IActionResult> Edit(int id, [Bind("Portfolio", "PortfolioSecurities")] PortfolioEditViewModel viewModel)
         {
-            if (id != portfolio.Id) return NotFound();
+            var user = await GetCurrentUserAsync();
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
 
-            if (ModelState.IsValid)
+            // Remove all of the current PortfolioSecurities for the portfolio
+            var portfolioSecuritiesToDelete = await _context.PortfolioSecurities
+                .Where(ps => ps.PortfolioId == viewModel.Portfolio.Id).ToListAsync();
+
+            foreach(PortfolioSecurity ps in portfolioSecuritiesToDelete)
             {
-                try
-                {
-                    _context.Update(portfolio);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!PortfolioExists(portfolio.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.Remove(ps);
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", portfolio.UserId);
-            return View(portfolio);
+
+
+            // Get all the securities from the database
+            var securities = _context.Securities;
+
+            // Iterate over the list of PortfolioSecurities entered by the user
+            foreach (PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            {
+                string ticker = ps.Security.Ticker;
+                if (!securities.Any(s => s.Ticker == ticker))
+                {
+                    // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
+                    var request = new HttpRequestMessage(HttpMethod.Get,
+                        $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
+                    var response = await client.SendAsync(request);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        // Convert the response to an object and save the new security to the database
+                        var json = await response.Content.ReadAsStreamAsync();
+                        var stockResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+                        //SaveSecurity(stockResponse);
+                        Security newSecurity = new Security
+                        {
+                            Name = stockResponse.CompanyName,
+                            Ticker = stockResponse.Ticker,
+                            Description = stockResponse.Description
+                        };
+
+                        _context.Securities.Add(newSecurity);
+                        await _context.SaveChangesAsync();
+                    }
+                }
+            }
+
+            // Now all the securities should be in the DB. Get a new reference to them and iterate over the list of portfolio securities again
+            var updatedSecurities = _context.Securities;
+
+            if (id != viewModel.Portfolio.Id) return NotFound();
+
+            // Save the new portfolio to the database and get a reference to its Id
+            viewModel.Portfolio.UserId = user.Id;
+            _context.Update(viewModel.Portfolio);
+            await _context.SaveChangesAsync();
+            int portfolioId = viewModel.Portfolio.Id;
+
+            // iterate over PortfolioSecurities again and enter them into the database with their properties
+            foreach (PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            {
+                Security matchingSecurity = updatedSecurities.First(s => s.Ticker == ps.Security.Ticker);
+
+                PortfolioSecurity newPS = new PortfolioSecurity
+                {
+                    PortfolioId = portfolioId,
+                    SecurityId = matchingSecurity.Id,
+                    Weight = ps.Weight,
+                    AssetClassId = ps.AssetClassId
+                };
+
+                _context.Add(newPS);
+            }
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Portfolios/Delete/5

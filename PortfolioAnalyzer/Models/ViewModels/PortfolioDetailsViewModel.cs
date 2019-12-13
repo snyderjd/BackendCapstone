@@ -25,6 +25,8 @@ namespace PortfolioAnalyzer.Models.ViewModels
         [DataType(DataType.Date)]
         public DateTime EndDate { get; set; }
 
+        public string ChartData { get; set; }
+
         public PortfolioDetailsViewModel()
         {
             TimePeriodOptions = new List<SelectListItem>()

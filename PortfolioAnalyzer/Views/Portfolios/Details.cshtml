@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Details";
 }
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
 
 <h1>@Html.DisplayFor(model => model.Portfolio.Name)</h1>
 
@@ -105,6 +106,24 @@
         </div>
     </div>
 
+    <script>
+        // Get a reference to the viewModel that was passed in from the controller
+        //var viewModel = @*@Html.Raw(Json.Serialize((Model)));*@
+
+
+        var chartData = @Html.Raw(Model.ChartData);
+        console.log(chartData);
+
+        let dates = Object.keys(chartData).map(key => key.split("T")[0]);
+        let values = Object.values(chartData).map(value => Math.round(value));
+
+        console.log(dates);
+        console.log(values);
+
+    
+    </script>
 }
+
+
 
 

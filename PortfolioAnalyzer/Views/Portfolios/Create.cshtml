@@ -29,7 +29,6 @@
                 <span asp-validation-for="Portfolio.Notes" class="text-danger"></span>
             </div>
 
-
             <h4>Add Securities</h4>
             <table class="table">
                 <thead>
@@ -39,8 +38,8 @@
                         <th>Asset Class</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <tr>
+                <tbody class="inputTableBody">
+                    <tr class="addSecurityRow">
                         <td>
                             <input asp-for="@Model.PortfolioSecurities[0].Security.Ticker" class="form-control" />
                         </td>
@@ -51,7 +50,7 @@
                             <select asp-for="@Model.PortfolioSecurities[0].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
                         </td>
                     </tr>
-                    <tr>
+                    <tr class="addSecurityRow">
                         <td>
                             <input asp-for="@Model.PortfolioSecurities[1].Security.Ticker" class="form-control" />
                         </td>
@@ -62,7 +61,7 @@
                             <select asp-for="@Model.PortfolioSecurities[1].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
                         </td>
                     </tr>
-                    @*<tr>
+                    <tr class="addSecurityRow">
                         <td>
                             <input asp-for="@Model.PortfolioSecurities[2].Security.Ticker" class="form-control" />
                         </td>
@@ -72,8 +71,8 @@
                         <td>
                             <select asp-for="@Model.PortfolioSecurities[2].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
                         </td>
-                    </tr>*@
-                    @*<tr>
+                    </tr>
+                    <tr>
                         <td>
                             <input asp-for="@Model.PortfolioSecurities[3].Security.Ticker" class="form-control" />
                         </td>
@@ -149,18 +148,21 @@
                         <td>
                             <select asp-for="@Model.PortfolioSecurities[9].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
                         </td>
-                    </tr>*@
+                    </tr>
                 </tbody>
             </table>
 
             <div class="form-group">
+                <input value="Add Security" class="btn btn-primary addSecurityButton" id="addSecurityButton" />
+            </div>
+
+            <div class="form-group createPortfolio">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
+
         </form>
     </div>
 </div>
-
-
 
 <div>
     <a asp-action="Index">Back to List</a>
@@ -169,6 +171,7 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
 
 
 

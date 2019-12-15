@@ -7,10 +7,13 @@ namespace PortfolioAnalyzer.Models
 {
     public class PortfolioSecurityInput
     {
+        public int? Id { get; set; }
+        public int? PortfolioId { get; set; }
+        public Portfolio Portfolio { get; set; }
+        public int? SecurityId { get; set; }
         public SecurityInput Security { get; set; }
         public int? Weight { get; set; }
         public int? AssetClassId { get; set; }
-
     }
 }
 

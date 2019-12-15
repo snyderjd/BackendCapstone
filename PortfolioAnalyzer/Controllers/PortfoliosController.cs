@@ -257,19 +257,31 @@ namespace PortfolioAnalyzer.Controllers
             {
                 Portfolio = portfolio,
                 AssetClasses = _context.AssetClasses.ToList(),
-                PortfolioSecurities = new List<PortfolioSecurity>()
+                PortfolioSecurities = new List<PortfolioSecurityInput>()
             };
 
             // Assign the current PortfolioSecurities to the viewModel's list of PortfolioSecurities
             foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
             {
-                viewModel.PortfolioSecurities.Add(ps);
+                PortfolioSecurityInput currentPS = new PortfolioSecurityInput()
+                {
+                    Id = ps.Id,
+                    PortfolioId = ps.PortfolioId,
+                    SecurityId = ps.SecurityId,
+                    Security = new SecurityInput()
+                    {
+                        Ticker = ps.Security.Ticker
+                    },
+                    Weight = ps.Weight,
+                    AssetClassId = ps.AssetClassId
+                };
+                viewModel.PortfolioSecurities.Add(currentPS);
             }
 
             // Add 10 more PortfolioSecurity objects to the viewModel's list
             for (int i = 0; i < 10; i++)
             {
-                viewModel.PortfolioSecurities.Add(new PortfolioSecurity());
+                viewModel.PortfolioSecurities.Add(new PortfolioSecurityInput());
             }
 
             if (portfolio == null) return NotFound();
@@ -303,33 +315,37 @@ namespace PortfolioAnalyzer.Controllers
             var securities = _context.Securities;
 
             // Iterate over the list of PortfolioSecurities entered by the user
-            foreach (PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            foreach (PortfolioSecurityInput ps in viewModel.PortfolioSecurities)
             {
-                string ticker = ps.Security.Ticker;
-                if (!securities.Any(s => s.Ticker == ticker))
+                if (ps.Security.Ticker != null) // Only check for security if the row was not blank
                 {
-                    // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
-                    var request = new HttpRequestMessage(HttpMethod.Get,
-                        $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
-                    var response = await client.SendAsync(request);
-
-                    if (response.IsSuccessStatusCode)
+                    string ticker = ps.Security.Ticker;
+                    if (!securities.Any(s => s.Ticker == ticker))
                     {
-                        // Convert the response to an object and save the new security to the database
-                        var json = await response.Content.ReadAsStreamAsync();
-                        var stockResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXSecurity>(json);
-                        //SaveSecurity(stockResponse);
-                        Security newSecurity = new Security
-                        {
-                            Name = stockResponse.CompanyName,
-                            Ticker = stockResponse.Ticker,
-                            Description = stockResponse.Description
-                        };
+                        // Security is not in the DB and needs to be retrieved from IEX Cloud and saved to the DB
+                        var request = new HttpRequestMessage(HttpMethod.Get,
+                            $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
+                        var response = await client.SendAsync(request);
 
-                        _context.Securities.Add(newSecurity);
-                        await _context.SaveChangesAsync();
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Convert the response to an object and save the new security to the database
+                            var json = await response.Content.ReadAsStreamAsync();
+                            var stockResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+                            //SaveSecurity(stockResponse);
+                            Security newSecurity = new Security
+                            {
+                                Name = stockResponse.CompanyName,
+                                Ticker = stockResponse.Ticker,
+                                Description = stockResponse.Description
+                            };
+
+                            _context.Securities.Add(newSecurity);
+                            await _context.SaveChangesAsync();
+                        }
                     }
                 }
+                
             }
 
             // Now all the securities should be in the DB. Get a new reference to them and iterate over the list of portfolio securities again
@@ -344,19 +360,22 @@ namespace PortfolioAnalyzer.Controllers
             int portfolioId = viewModel.Portfolio.Id;
 
             // iterate over PortfolioSecurities again and enter them into the database with their properties
-            foreach (PortfolioSecurity ps in viewModel.PortfolioSecurities)
+            foreach (PortfolioSecurityInput ps in viewModel.PortfolioSecurities)
             {
-                Security matchingSecurity = updatedSecurities.First(s => s.Ticker == ps.Security.Ticker);
-
-                PortfolioSecurity newPS = new PortfolioSecurity
+                if (ps.Security.Ticker != null) // only create new PS if the row was not blank
                 {
-                    PortfolioId = portfolioId,
-                    SecurityId = matchingSecurity.Id,
-                    Weight = ps.Weight,
-                    AssetClassId = ps.AssetClassId
-                };
+                    Security matchingSecurity = updatedSecurities.First(s => s.Ticker == ps.Security.Ticker);
 
-                _context.Add(newPS);
+                    PortfolioSecurity newPS = new PortfolioSecurity
+                    {
+                        PortfolioId = portfolioId,
+                        SecurityId = matchingSecurity.Id,
+                        Weight = (int)ps.Weight,
+                        AssetClassId = (int)ps.AssetClassId
+                    };
+
+                    _context.Add(newPS);
+                }
             }
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

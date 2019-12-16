@@ -14,6 +14,7 @@ namespace PortfolioAnalyzer.Models
         public SecurityInput Security { get; set; }
         public int? Weight { get; set; }
         public int? AssetClassId { get; set; }
+
     }
 }
 

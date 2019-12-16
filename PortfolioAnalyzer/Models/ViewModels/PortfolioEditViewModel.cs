@@ -19,5 +19,6 @@ namespace PortfolioAnalyzer.Models.ViewModels
         }
         public Portfolio Portfolio { get; set; }
         public List<PortfolioSecurityInput> PortfolioSecurities { get; set; }
+
     }
 }

@@ -38,123 +38,56 @@
                     </tr>
                 </thead>
                 <tbody class="inputTableBody">
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[0].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[0].Weight" class="form-control weight_0" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[0].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[1].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[1].Weight" class="form-control weight_1" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[1].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[2].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[2].Weight" class="form-control weight_2" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[2].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[3].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[3].Weight" class="form-control weight_3" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[3].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[4].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[4].Weight" class="form-control weight_4" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[4].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[5].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[5].Weight" class="form-control weight_5" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[5].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[6].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[6].Weight" class="form-control weight_6" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[6].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[7].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[7].Weight" class="form-control weight_7" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[7].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[8].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[8].Weight" class="form-control weight_8" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[8].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[9].Security.Ticker" class="form-control" />
-                        </td>
-                        <td>
-                            <input asp-for="@Model.PortfolioSecurities[9].Weight" class="form-control weight_9" />
-                        </td>
-                        <td>
-                            <select asp-for="@Model.PortfolioSecurities[9].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-                        </td>
-                    </tr>
+                    @for (int i = 0; i < Model.PortfolioSecurities.Count(); i++)
+                    {
+                        if (Model.PortfolioSecurities[i].Weight > 0)
+                        {
+                            <tr>
+                                <td>
+                                    <input asp-for="@Model.PortfolioSecurities[i].Security.Ticker" class="form-control" />
+                                </td>
+                                <td>
+                                    <input asp-for="@Model.PortfolioSecurities[i].Weight" class="form-control weight_0" />
+                                </td>
+                                <td>
+                                    <select asp-for="@Model.PortfolioSecurities[i].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
+                                </td>
+                            </tr>
+                        }
+                    }
+
+
+                    @*<tr>
+            <td>
+                <input asp-for="@Model.PortfolioSecurities[1].Security.Ticker" class="form-control" />
+            </td>
+            <td>
+                <input asp-for="@Model.PortfolioSecurities[1].Weight" class="form-control weight_1" />
+            </td>
+            <td>
+                <select asp-for="@Model.PortfolioSecurities[1].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <input asp-for="@Model.PortfolioSecurities[9].Security.Ticker" class="form-control" />
+            </td>
+            <td>
+                <input asp-for="@Model.PortfolioSecurities[9].Weight" class="form-control weight_9" />
+            </td>
+            <td>
+                <select asp-for="@Model.PortfolioSecurities[9].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
+            </td>
+        </tr>*@
                 </tbody>
             </table>
 
             <div>
                 <p class="text-danger">@ViewData["WeightError"]</p>
             </div>
-
+            <div>
+                <button class="btn btn-primary addSecurityButton">Add Security</button>
+            </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -171,24 +104,39 @@
 }
 
 <script>
-    function weightSum() {
-        let weights = [
-            document.querySelector(".weight_0"),
-            document.querySelector(".weight_1"),
-            document.querySelector(".weight_2"),
-            document.querySelector(".weight_3"),
-            document.querySelector(".weight_4"),
-            document.querySelector(".weight_5"),
-            document.querySelector(".weight_6"),
-            document.querySelector(".weight_7"),
-            document.querySelector(".weight_8"),
-            document.querySelector(".weight_9")
-        ];
+    const inputTable = document.querySelector(".inputTableBody");
+    const addButton = document.querySelector(".addSecurityButton");
 
-        return weights.reduce(function (accumulator, currentValue) {
-            return accumulator, currentValue
-        }, 0);
-    }
+    addButton.addEventListener("click", event => {
+        event.preventDefault();
+        const i = inputTable.childElementCount;
+
+        if (i < 9) {
+            const newInputRow = document.createElement("tr")
+            newInputRow.innerHTML =
+                `<td>
+                    <input class="form-control" type="text" id="PortfolioSecurities_${i}__Security_Ticker" name="PortfolioSecurities[${i}].Security.Ticker" value="" />
+                 </td>
+                 <td>
+                    <input class="form-control" type="number" id="PortfolioSecurities_${i}__Weight" name="PortfolioSecurities[${i}].Weight" value="" />
+                 </td>
+                 <td>
+                    <select class="form-control" id="PortfolioSecurities_${i}__AssetClassId" name="PortfolioSecurities[${i}].AssetClassId">
+                        <option value="1">Equities</option>
+                        <option value="2">Fixed Income</option>
+                        <option value="3">Commodities</option>
+                        <option value="4">Precious Metals</option>
+                        <option value="5">Real Estate</option>
+                        <option value="6">Alternatives</option>
+                        <option value="7">Cash</option>
+                    </select>
+                 </td>`
+
+            inputTable.appendChild(newInputRow);
+        }
+        
+    })
+
 </script>
 
 

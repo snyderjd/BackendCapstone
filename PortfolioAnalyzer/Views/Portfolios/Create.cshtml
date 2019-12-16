@@ -106,26 +106,27 @@
         console.log("You clicked the button");
         // Add string to innerHTML of the security input table
         if (i <= 9) {
-            addSecurityTable.innerHTML +=
-                `<tr>
-                    <td>
-                        <input class="form-control" type="text" id="PortfolioSecurities_${i}__Security_Ticker" name="PortfolioSecurities[${i}].Security.Ticker" value="" />
-                    </td>
-                    <td>
-                        <input class="form-control" type="number" id="PortfolioSecurities_${i}__Weight" name="PortfolioSecurities[${i}].Weight" value="" />
-                    </td>
-                    <td>
-                        <select class="form-control" id="PortfolioSecurities_${i}__AssetClassId" name="PortfolioSecurities[${i}].AssetClassId">
-                            <option value="1">Equities</option>
-                            <option value="2">Fixed Income</option>
-                            <option value="3">Commodities</option>
-                            <option value="4">Precious Metals</option>
-                            <option value="5">Real Estate</option>
-                            <option value="6">Alternatives</option>
-                            <option value="7">Cash</option>
-                        </select>
-                    </td>
-                </tr>`
+            const newInputRow = document.createElement("tr");
+            newInputRow.innerHTML =
+                `<td>
+                    <input class="form-control" type="text" id="PortfolioSecurities_${i}__Security_Ticker" name="PortfolioSecurities[${i}].Security.Ticker" value="" />
+                 </td>
+                 <td>
+                    <input class="form-control" type="number" id="PortfolioSecurities_${i}__Weight" name="PortfolioSecurities[${i}].Weight" value="" />
+                 </td>
+                 <td>
+                    <select class="form-control" id="PortfolioSecurities_${i}__AssetClassId" name="PortfolioSecurities[${i}].AssetClassId">
+                        <option value="1">Equities</option>
+                        <option value="2">Fixed Income</option>
+                        <option value="3">Commodities</option>
+                        <option value="4">Precious Metals</option>
+                        <option value="5">Real Estate</option>
+                        <option value="6">Alternatives</option>
+                        <option value="7">Cash</option>
+                    </select>
+                 </td>`
+
+            addSecurityTable.appendChild(newInputRow);
 
             // increment i
             i++;
@@ -134,25 +135,7 @@
 
 </script>
 
-@*<tr class="addSecurityRow">
-    <td>
-        <input class="form-control" type="text" id="PortfolioSecurities_1__Security_Ticker" name="PortfolioSecurities[1].Security.Ticker" value="" />
-    </td>
-    <td>
-        <input class="form-control" type="number" id="PortfolioSecurities_1__Weight" name="PortfolioSecurities[1].Weight" value="" />
-    </td>
-    <td>
-        <select class="form-control" id="PortfolioSecurities_1__AssetClassId" name="PortfolioSecurities[1].AssetClassId">
-            <option value="1">Equities</option>
-            <option value="2">Fixed Income</option>
-            <option value="3">Commodities</option>
-            <option value="4">Precious Metals</option>
-            <option value="5">Real Estate</option>
-            <option value="6">Alternatives</option>
-            <option value="7">Cash</option>
-        </select>
-    </td>
-</tr>*@
+
 
 
 

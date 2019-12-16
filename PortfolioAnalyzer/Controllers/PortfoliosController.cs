@@ -167,6 +167,15 @@ namespace PortfolioAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Portfolio", "PortfolioSecurities")] PortfolioCreateViewModel viewModel)
         {
+
+            // Make sure weights sum to 100
+            if (viewModel.PortfolioSecurities.Select(ps => ps.Weight).Sum() != 100)
+            {
+                viewModel.AssetClasses = _context.AssetClasses.ToList();
+                ViewData["WeightError"] = "The sum of all weights must equal 100";
+                return View(viewModel);
+            }
+
             var user = await GetCurrentUserAsync();
             string token = GetToken();
             var client = _clientFactory.CreateClient();
@@ -297,6 +306,14 @@ namespace PortfolioAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Portfolio", "PortfolioSecurities")] PortfolioEditViewModel viewModel)
         {
+            // Make sure all weights add up to 100
+            if (viewModel.PortfolioSecurities.Select(ps => ps.Weight).Sum() != 100)
+            {
+                viewModel.AssetClasses = _context.AssetClasses.ToList();
+                ViewData["WeightError"] = "The sum of all weights must equal 100";
+                return View(viewModel);
+            }
+
             var user = await GetCurrentUserAsync();
             string token = GetToken();
             var client = _clientFactory.CreateClient();

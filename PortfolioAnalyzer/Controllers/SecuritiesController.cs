@@ -20,9 +20,21 @@ namespace PortfolioAnalyzer.Controllers
         }
 
         // GET: Securities
-        public async Task<IActionResult> Index(string searchString)
+        public async Task<IActionResult> Index(string sortOrder, string currentFilter, string searchString, int? pageNumber)
         {
-            ViewData["Filter"] = searchString;
+            ViewData["CurrentSort"] = sortOrder;
+
+            if (searchString != null)
+            {
+                pageNumber = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+            
+            ViewData["CurrentFilter"] = searchString;
+
             var securities = await _context.Securities.OrderBy(s => s.Ticker).ToListAsync();
 
             if (!String.IsNullOrEmpty(searchString))
@@ -31,7 +43,12 @@ namespace PortfolioAnalyzer.Controllers
                     || s.Name.Contains(searchString)).ToList();
             }
 
-            return View(securities);
+            int pageSize = 5;
+            return View(PaginatedList<Security>.Create(securities.AsQueryable(), pageNumber ?? 1, pageSize));
+
+
+            
+            //return View(await PaginatedList<Student>.CreateAsync(students.AsNoTracking(), pageNumber ?? 1, pageSize));
         }
 
         // GET: Securities/Details/5

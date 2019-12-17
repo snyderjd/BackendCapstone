@@ -27,6 +27,8 @@ namespace PortfolioAnalyzer.Models.ViewModels
 
         public string ChartData { get; set; }
 
+        public string AssetAllocationData { get; set; }
+
         public PortfolioDetailsViewModel()
         {
             TimePeriodOptions = new List<SelectListItem>()

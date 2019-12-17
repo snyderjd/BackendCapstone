@@ -167,7 +167,6 @@ namespace PortfolioAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Portfolio", "PortfolioSecurities")] PortfolioCreateViewModel viewModel)
         {
-
             // Make sure weights sum to 100
             if (viewModel.PortfolioSecurities.Select(ps => ps.Weight).Sum() != 100)
             {

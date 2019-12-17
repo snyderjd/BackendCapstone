@@ -25,7 +25,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="Portfolio.Notes" class="control-label"></label>
-                <input asp-for="Portfolio.Notes" class="form-control" />
+                <textarea asp-for="Portfolio.Notes" class="form-control" rows="3" cols="100"></textarea>
                 <span asp-validation-for="Portfolio.Notes" class="text-danger"></span>
             </div>
             <h4>Edit Securities</h4>
@@ -55,30 +55,6 @@
                             </tr>
                         }
                     }
-
-
-                    @*<tr>
-            <td>
-                <input asp-for="@Model.PortfolioSecurities[1].Security.Ticker" class="form-control" />
-            </td>
-            <td>
-                <input asp-for="@Model.PortfolioSecurities[1].Weight" class="form-control weight_1" />
-            </td>
-            <td>
-                <select asp-for="@Model.PortfolioSecurities[1].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-            </td>
-        </tr>
-        <tr>
-            <td>
-                <input asp-for="@Model.PortfolioSecurities[9].Security.Ticker" class="form-control" />
-            </td>
-            <td>
-                <input asp-for="@Model.PortfolioSecurities[9].Weight" class="form-control weight_9" />
-            </td>
-            <td>
-                <select asp-for="@Model.PortfolioSecurities[9].AssetClassId" class="form-control" asp-items=Model.AssetClassOptions></select>
-            </td>
-        </tr>*@
                 </tbody>
             </table>
 

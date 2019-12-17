@@ -114,14 +114,8 @@
                     options: {
 
                     },
-                    plugins: {
-                        plugin: {
-                            color: 'black',
-                            formatter: function (value) {
-                                return value + '%';
-                            }
-                        }
-                    }
+                    plugins: [ChartDataLabels]
+                    
                 })
 
                 assetAllocationChart.plugins.register(ChartDataLabels);

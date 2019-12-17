@@ -20,6 +20,17 @@
     </div>
 </form>
 
+<form asp-action="AddSecurity" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Can't find what you're looking for? Add a security by ticker:
+            <input type="text" name="NewTicker" value="@ViewData["NewTicker"]" />
+            <input type="submit" value="AddSecurity" class="btn btn-primary" />
+        </p>
+        <p>@ViewData["SavedMessage"]</p>
+    </div>
+</form>
+
 <table class="table">
     <thead>
         <tr>

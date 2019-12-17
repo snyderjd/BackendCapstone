@@ -20,9 +20,18 @@ namespace PortfolioAnalyzer.Controllers
         }
 
         // GET: Securities
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchString)
         {
-            return View(await _context.Securities.ToListAsync());
+            ViewData["Filter"] = searchString;
+            var securities = await _context.Securities.OrderBy(s => s.Ticker).ToListAsync();
+
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                securities = securities.Where(s => s.Ticker.Contains(searchString)
+                    || s.Name.Contains(searchString)).ToList();
+            }
+
+            return View(securities);
         }
 
         // GET: Securities/Details/5

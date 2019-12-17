@@ -4,6 +4,7 @@
     ViewData["Title"] = "Details";
 }
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@0.7.0"></script>
 
 <h1>@Html.DisplayFor(model => model.Portfolio.Name)</h1>
 
@@ -67,157 +68,175 @@
 
 </div>
 
-<div>
-    <div>
-        <canvas id="assetAllocationChart"></canvas>
-    </div>
 
-    <script>
-        const assetAllocationLabels = @Html.Raw(Model.AssetAllocationKeys);
-        const assetAllocationData = @Html.Raw(Model.AssetAllocationValues);
-
-        console.log(assetAllocationLabels);
-        console.log(assetAllocationData);
-
-        var assetAllocationCtx = document.getElementById("assetAllocationChart").getContext("2d");
-
-        var assetAllocationChart = new Chart(assetAllocationCtx, {
-            type: "pie",
-            data: {
-                datasets: [{
-                    labels: assetAllocationLabels,
-                    data: assetAllocationData,
-                    backgroundColor: ['red', 'blue', 'green', 'yellow', 'gray', 'orange']
-                }]
-            }
-        })
-    </script>
-</div>
 
 
 <div>
-    @*<div class="form-group">
-            <label asp-for="@Model.TimePeriodOptions" class="control-label"></label>
-            <select asp-for="@Model.TimePeriod" class="form-control" asp-items="@Model.TimePeriodOptions"></select>
-        </div>*@
     @Html.ActionLink("1 Year", "Details", new { timePeriod = "1y" }) |
     @Html.ActionLink("2 Years", "Details", new { timePeriod = "2y" }) |
     @Html.ActionLink("5 Years", "Details", new { timePeriod = "5y" }) |
 </div>
 
-@if (Model.TimePeriod != null)
-{
-    <div>
-        <div>
-            <h4>Analysis</h4>
+<div class="container">
+    <div class="row">
+        <div class="assetAllocation col-4">
+            <h4>Asset Allocation</h4>
             <hr />
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Start Date</th>
-                        <th>End Date</th>
-                        <th>Period Return</th>
-                        <th>CAGR</th>
-                        <th>Standard Deviation</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@Html.DisplayFor(model => model.StartDate)</td>
-                        <td>@Html.DisplayFor(model => model.EndDate)</td>
-                        <td>@Html.DisplayFor(model => model.Return) %</td>
-                        <td>@Html.DisplayFor(model => model.CAGR) %</td>
-                        <td>@Html.DisplayFor(model => model.StdDeviation) %</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div>
+                <canvas width="300" height="300" id="assetAllocationChart"></canvas>
+            </div>
+
+            <script>
+                Chart.plugins.unregister(ChartDataLabels);
+                var plugin = [ChartDataLabels]
+
+                const assetAllocationLabels = @Html.Raw(Model.AssetAllocationKeys);
+                const assetAllocationData = @Html.Raw(Model.AssetAllocationValues);
+
+                console.log(assetAllocationLabels);
+                console.log(assetAllocationData);
+
+                var assetAllocationCtx = document.getElementById("assetAllocationChart").getContext("2d");
+
+                
+
+                var assetAllocationChart = new Chart(assetAllocationCtx, {
+                    plugins: [ChartDataLabels],
+                    type: "pie",
+                    data: {
+                        labels: assetAllocationLabels,
+                        datasets: [{
+                            label: assetAllocationLabels,
+                            data: assetAllocationData,
+                            backgroundColor: ['red', 'blue', 'green', 'yellow', 'gray', 'orange']
+                        }]
+                    },
+                    options: {
+
+                    },
+                    plugins: {
+                        plugin: {
+                            color: 'black',
+                            formatter: function (value) {
+                                return value + '%';
+                            }
+                        }
+                    }
+                })
+
+                assetAllocationChart.plugins.register(ChartDataLabels);
+            </script>
         </div>
-    </div>
-    <div>
-        <canvas id="portfolioValuesChart"></canvas>
-    </div>
+        @if (Model.TimePeriod != null)
+        {
+            <div class="col-8">
+                <div>
+                    <h4>Analysis</h4>
+                    <hr />
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Start Date</th>
+                                <th>End Date</th>
+                                <th>Period Return</th>
+                                <th>CAGR</th>
+                                <th>Standard Deviation</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Html.DisplayFor(model => model.StartDate)</td>
+                                <td>@Html.DisplayFor(model => model.EndDate)</td>
+                                <td>@Html.DisplayFor(model => model.Return) %</td>
+                                <td>@Html.DisplayFor(model => model.CAGR) %</td>
+                                <td>@Html.DisplayFor(model => model.StdDeviation) %</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-    <script>
-        // Get a reference to the viewModel that was passed in from the controller
-        //var viewModel = @*@Html.Raw(Json.Serialize((Model)));*@
+                <div>
+                    <canvas id="portfolioValuesChart"></canvas>
+                </div>
+            </div>
 
-//        var myPieChart = new Chart(ctx, {
-//    type: 'pie',
-//    data: data,
-//    options: options
-//});
+            <script>
+                // Get a reference to the data that was passed in from the controller
 
-        var chartData = @Html.Raw(Model.ChartData);
-        console.log(chartData);
+                var chartData = @Html.Raw(Model.ChartData);
+                console.log(chartData);
 
-        let dates = Object.keys(chartData).map(key => key.split("T")[0]);
-        let values = Object.values(chartData).map(value => Math.round(value));
+                let dates = Object.keys(chartData).map(key => key.split("T")[0]);
+                let values = Object.values(chartData).map(value => Math.round(value));
 
-        console.log(dates);
-        console.log(values);
+                console.log(dates);
+                console.log(values);
 
-        var ctx = document.getElementById("portfolioValuesChart").getContext("2d");
+                var ctx = document.getElementById("portfolioValuesChart").getContext("2d");
 
-        var myChart = new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: dates,
-                datasets: [{
-                    label: 'Value',
-                    data: values,
-                    backgroundColor: [
-                        'rgba(29, 88, 215, 1)'
-                    ],
-                    borderColor: [
-                        'rgba(255, 99, 132, 1)',
-                        'rgba(54, 162, 235, 1)',
-                        'rgba(255, 206, 86, 1)',
-                        'rgba(75, 192, 192, 1)',
-                        'rgba(153, 102, 255, 1)',
-                        'rgba(255, 159, 64, 1)'
-                    ],
-                    pointBackgroundColor: [
-                        'rgba(210, 222, 249, 1)'
-                    ],
-                    pointBorderColor: [
-                        'rgba(210, 222, 249, 1)'
-                    ],
-                    borderWidth: 1,
-                    lineTension: 0
-                }]
-            },
-            options: {
-                legend: {
-                    display: false
-                },
-                title: {
-                    display: true,
-                    text: "Value of $100,000 Portfolio"
-                },
-                scales: {
-                    yAxes: [{
-                        display: true,
-                        labelString: "Value",
-                        ticks: {
-                            beginAtZero: false
+                var myChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates,
+                        datasets: [{
+                            label: 'Value',
+                            data: values,
+                            backgroundColor: [
+                                'rgba(29, 88, 215, 1)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)',
+                                'rgba(255, 206, 86, 1)',
+                                'rgba(75, 192, 192, 1)',
+                                'rgba(153, 102, 255, 1)',
+                                'rgba(255, 159, 64, 1)'
+                            ],
+                            pointBackgroundColor: [
+                                'rgba(210, 222, 249, 1)'
+                            ],
+                            pointBorderColor: [
+                                'rgba(210, 222, 249, 1)'
+                            ],
+                            borderWidth: 1,
+                            lineTension: 0
+                        }]
+                    },
+                    options: {
+                        legend: {
+                            display: false
                         },
-                        gridLines: {
-                            display: false
+                        title: {
+                            display: true,
+                            text: "Value of $100,000 Portfolio"
+                        },
+                        scales: {
+                            yAxes: [{
+                                display: true,
+                                labelString: "Value",
+                                ticks: {
+                                    beginAtZero: false
+                                },
+                                gridLines: {
+                                    display: false
+                                }
+                            }],
+                            xAxes: [{
+                                display: true,
+                                labelString: "Date",
+                                gridLines: {
+                                    display: false
+                                }
+                            }]
                         }
-                    }],
-                    xAxes: [{
-                        display: true,
-                        labelString: "Date",
-                        gridLines: {
-                            display: false
-                        }
-                    }]
-                }
-            }
-        });
+                    }
+                });
 
-    </script>
-}
+            </script>
+        }
+    </div>
+</div>
+
 
 
 

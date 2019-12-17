@@ -73,6 +73,9 @@ namespace PortfolioAnalyzer.Controllers
 
                 assetAllocation[ps.AssetClass.Name] += ps.Weight;
             }
+            // Convert dictionary to json and assign to viewModel
+            viewModel.AssetAllocationKeys = JsonConvert.SerializeObject(assetAllocation.Keys);
+            viewModel.AssetAllocationValues = JsonConvert.SerializeObject(assetAllocation.Values);
 
             // Get the prices for all the securities in the portfolio
             if (timePeriod != null)

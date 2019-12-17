@@ -64,6 +64,34 @@
             </tbody>
         </table>
     </div>
+
+</div>
+
+<div>
+    <div>
+        <canvas id="assetAllocationChart"></canvas>
+    </div>
+
+    <script>
+        const assetAllocationLabels = @Html.Raw(Model.AssetAllocationKeys);
+        const assetAllocationData = @Html.Raw(Model.AssetAllocationValues);
+
+        console.log(assetAllocationLabels);
+        console.log(assetAllocationData);
+
+        var assetAllocationCtx = document.getElementById("assetAllocationChart").getContext("2d");
+
+        var assetAllocationChart = new Chart(assetAllocationCtx, {
+            type: "pie",
+            data: {
+                datasets: [{
+                    labels: assetAllocationLabels,
+                    data: assetAllocationData,
+                    backgroundColor: ['red', 'blue', 'green', 'yellow', 'gray', 'orange']
+                }]
+            }
+        })
+    </script>
 </div>
 
 
@@ -113,6 +141,11 @@
         // Get a reference to the viewModel that was passed in from the controller
         //var viewModel = @*@Html.Raw(Json.Serialize((Model)));*@
 
+//        var myPieChart = new Chart(ctx, {
+//    type: 'pie',
+//    data: data,
+//    options: options
+//});
 
         var chartData = @Html.Raw(Model.ChartData);
         console.log(chartData);

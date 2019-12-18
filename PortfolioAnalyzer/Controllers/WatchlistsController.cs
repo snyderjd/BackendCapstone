@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PortfolioAnalyzer.Data;
 using PortfolioAnalyzer.Models;
+using PortfolioAnalyzer.Models.IEXModels;
 using PortfolioAnalyzer.Models.ViewModels;
 
 namespace PortfolioAnalyzer.Controllers
@@ -82,16 +83,76 @@ namespace PortfolioAnalyzer.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,Description,UserId")] Watchlist watchlist)
+        public async Task<IActionResult> Create([Bind("Watchlist, WatchlistSecurities")] WatchlistCreateViewModel viewModel)
         {
-            if (ModelState.IsValid)
+            var user = await GetCurrentUserAsync();
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+
+            // Get all the securities from the database
+            var securities = _context.Securities;
+
+            // Iterate over the list of WatchlistSecurities entered by the user
+            foreach (WatchlistSecurityInput ws in viewModel.WatchlistSecurities)
             {
-                _context.Add(watchlist);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                if (ws.Security.Ticker != null) // Only check for security if the row was not blank
+                {
+                    string ticker = ws.Security.Ticker;
+                    if (!securities.Any(s => s.Ticker == ticker))
+                    {
+                        // Security is not in the DB & needs to be retrieved from IEXCloud and saved to the DB
+                        var request = new HttpRequestMessage(HttpMethod.Get,
+                            $"https://cloud.iexapis.com/stable/stock/{ticker}/company?token={token}");
+                        var response = await client.SendAsync(request);
+
+                        if (response.IsSuccessStatusCode)
+                        {
+                            // Convert the response to an object and save the new security to the database
+                            var json = await response.Content.ReadAsStreamAsync();
+                            var stockResponse = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXSecurity>(json);
+
+                            Security newSecurity = new Security
+                            {
+                                Name = stockResponse.CompanyName,
+                                Ticker = stockResponse.Ticker,
+                                Description = stockResponse.Description
+                            };
+
+                            _context.Securities.Add(newSecurity);
+                            await _context.SaveChangesAsync();
+                        }
+                    }
+                }
             }
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", watchlist.UserId);
-            return View(watchlist);
+
+            // Now all the securities should be in the DB. Get a new reference to them and iterate over the list of WatchlistSecurities again
+            var updatedSecurities = _context.Securities;
+
+            // Save the new watchlist to the database and get a reference to its Id
+            viewModel.Watchlist.UserId = user.Id;
+            _context.Add(viewModel.Watchlist);
+            await _context.SaveChangesAsync();
+            int watchlistId = viewModel.Watchlist.Id;
+
+            // Iterate over WatchlistSecurities again and enter them into the database with their properties
+            foreach (WatchlistSecurityInput ws in viewModel.WatchlistSecurities)
+            {
+                if (ws.Security.Ticker != null) // only create new WS if the row was not blank
+                {
+                    Security matchingSecurity = updatedSecurities.First(s => s.Ticker == ws.Security.Ticker);
+
+                    WatchlistSecurity newWS = new WatchlistSecurity
+                    {
+                        WatchlistId = watchlistId,
+                        SecurityId = matchingSecurity.Id
+                    };
+
+                    _context.Add(newWS);
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
         }
 
         // GET: Watchlists/Edit/5

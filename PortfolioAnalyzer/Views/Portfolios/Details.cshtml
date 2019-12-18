@@ -98,8 +98,6 @@
 
                 var assetAllocationCtx = document.getElementById("assetAllocationChart").getContext("2d");
 
-                
-
                 var assetAllocationChart = new Chart(assetAllocationCtx, {
                     plugins: [ChartDataLabels],
                     type: "pie",
@@ -112,11 +110,21 @@
                         }]
                     },
                     options: {
-
+                        plugins: {
+                            datalabels: {
+                                formatter: function (value, ctx) {
+                                    
+                                    //return assetAllocationCtx.assetAllocationChart.data.labels[0] + value + '%'; 
+                                    return `${assetAllocationLabels[ctx.dataIndex]} ${value} %`;
+                                }
+                            }
+                        }
                     },
                     plugins: [ChartDataLabels]
                     
                 })
+
+                //return ctx.chart.data.labels[ctx.dataIndex] + '\n' + value + '%';
 
                 assetAllocationChart.plugins.register(ChartDataLabels);
             </script>

@@ -1,0 +1,140 @@
+﻿@model PortfolioAnalyzer.Models.ViewModels.WatchlistCreateViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Watchlist</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Watchlist.Name" class="control-label"></label>
+                <input asp-for="Watchlist.Name" class="form-control" />
+                <span asp-validation-for="Watchlist.Name" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Watchlist.Description" class="control-label"></label>
+                <input asp-for="Watchlist.Description" class="form-control" />
+                <span asp-validation-for="Watchlist.Description" class="text-danger"></span>
+            </div>
+
+            <h4>Add Securities</h4>
+            <div><p>Add securities to your watchlist.</p></div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Ticker</th>
+                    </tr>
+                </thead>
+                <tbody class="inputTableBody">
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.WatchlistSecurities[0].Security.Ticker" class="form-control" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <input asp-for="@Model.WatchlistSecurities[1].Security.Ticker" class="form-control" />
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div>
+                <button class="btn btn-primary addSecurityButton">Add Security</button>
+            </div>
+            <br />
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+
+<script>
+    // Get a reference to the table to add input rows to and a reference to the button
+    var addSecurityTable = document.querySelector(".inputTableBody");
+    var addSecurityButton = document.querySelector(".addSecurityButton");
+
+    addSecurityButton.addEventListener("click", event => {
+        event.preventDefault();
+        addSecurity();
+    });
+
+    // Counter for List<WatchlistSecurityInput> index
+    let i = 2;
+
+    function addSecurity() {
+        if (i <= 9) {
+            // Create an element with a string of HTML for another security input and references to WatchlistSecurities
+            const newInputRow = document.createElement("tr");
+            newInputRow.innerHTML =
+                `<td>
+                    <input class="form-control" type="text" id="WatchlistSecurities_${i}__Security_Ticker" name="WatchlistSecurities[${i}].Security.Ticker" value="" />
+                 <td>`;
+            addSecurityTable.appendChild(newInputRow);
+
+            i++ // increment i
+        }
+    }
+</script>
+
+@*<script>
+    // Get a reference to the table to add input rows to and the button
+    const addSecurityTable = document.querySelector(".inputTableBody");
+    const addSecurityButton = document.querySelector(".addSecurityButton");
+
+    addSecurityButton.addEventListener("click", event => {
+        event.preventDefault();
+        addSecurity();
+    })
+
+    // Counter for List<PortfolioSecurityInput> index
+    let i = 2;
+
+    function addSecurity() {
+        console.log("You clicked the button");
+        // Add string to innerHTML of the security input table
+        if (i <= 9) {
+            const newInputRow = document.createElement("tr");
+            newInputRow.innerHTML =
+                `<td>
+                    <input class="form-control" type="text" id="PortfolioSecurities_${i}__Security_Ticker" name="PortfolioSecurities[${i}].Security.Ticker" value="" />
+                 </td>
+                 <td>
+                    <input class="form-control" type="number" id="PortfolioSecurities_${i}__Weight" name="PortfolioSecurities[${i}].Weight" value="" />
+                 </td>
+                 <td>
+                    <select class="form-control" id="PortfolioSecurities_${i}__AssetClassId" name="PortfolioSecurities[${i}].AssetClassId">
+                        <option value="1">Equities</option>
+                        <option value="2">Fixed Income</option>
+                        <option value="3">Commodities</option>
+                        <option value="4">Precious Metals</option>
+                        <option value="5">Real Estate</option>
+                        <option value="6">Alternatives</option>
+                        <option value="7">Cash</option>
+                    </select>
+                 </td>`
+
+            addSecurityTable.appendChild(newInputRow);
+
+            // increment i
+            i++;
+        }
+    }
+
+</script>*@

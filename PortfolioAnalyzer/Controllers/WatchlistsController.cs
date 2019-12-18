@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PortfolioAnalyzer.Data;
 using PortfolioAnalyzer.Models;
+using PortfolioAnalyzer.Models.ViewModels;
 
 namespace PortfolioAnalyzer.Controllers
 {
@@ -60,8 +61,20 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Watchlists/Create
         public IActionResult Create()
         {
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id");
-            return View();
+            // Create the viewModel
+            var viewModel = new WatchlistCreateViewModel
+            {
+                Watchlist = new Watchlist(),
+                WatchlistSecurities = new List<WatchlistSecurityInput>()
+            };
+
+            // Add 10 WatchlistSecurity objects to the viewModel's list
+            for (int i = 0; i < 10; i++)
+            {
+                viewModel.WatchlistSecurities.Add(new WatchlistSecurityInput());
+            }
+
+            return View(viewModel);
         }
 
         // POST: Watchlists/Create

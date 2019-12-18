@@ -59,7 +59,7 @@ namespace PortfolioAnalyzer.Data
 
             // Restrict deletion of related Security when WatchlistSecurity entry is removed
             modelBuilder.Entity<Security>()
-                .HasMany(s => WatchlistSecurities)
+                .HasMany(s => s.WatchlistSecurities)
                 .WithOne(ws => ws.Security)
                 .OnDelete(DeleteBehavior.Restrict);
 

@@ -17,5 +17,6 @@ namespace PortfolioAnalyzer.Models
         public string Description { get; set; }
 
         public virtual ICollection<PortfolioSecurity> PortfolioSecurities { get; set; }
+        public virtual ICollection<WatchlistSecurity> WatchlistSecurities { get; set; }
     }
 }

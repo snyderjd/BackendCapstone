@@ -160,11 +160,45 @@ namespace PortfolioAnalyzer.Controllers
         {
             if (id == null) return NotFound();
 
-            var watchlist = await _context.Watchlists.FindAsync(id);
+            // Get the watchlist and include navigation properties
+            var watchlist = await _context.Watchlists
+                .Include(w => w.WatchlistSecurities)
+                    .ThenInclude(w => w.Security)
+                .FirstOrDefaultAsync(w => w.Id == id);
+
+            var viewModel = new WatchlistEditViewModel()
+            {
+                Watchlist = watchlist,
+                WatchlistSecurities = new List<WatchlistSecurityInput>()
+            };
+
+            // Assign the current WatchlistSecurities to the viewModel
+            foreach (WatchlistSecurity ws in viewModel.Watchlist.WatchlistSecurities)
+            {
+                WatchlistSecurityInput currentWS = new WatchlistSecurityInput()
+                {
+                    Id = ws.Id,
+                    WatchlistId = ws.WatchlistId,
+                    SecurityId = ws.SecurityId,
+                    Security = new SecurityInput
+                    {
+                        Ticker = ws.Security.Ticker
+                    },
+                    HasSecurity = true
+                };
+
+                viewModel.WatchlistSecurities.Add(currentWS);
+            }
+
+            // Add 10 more WatchlistSecurity objects to the viewModel's list
+            for (int i = 0; i < 10; i++)
+            {
+                viewModel.WatchlistSecurities.Add(new WatchlistSecurityInput());
+            }
 
             if (watchlist == null) return NotFound();
-            ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", watchlist.UserId);
-            return View(watchlist);
+
+            return View(viewModel);
         }
 
         // POST: Watchlists/Edit/5

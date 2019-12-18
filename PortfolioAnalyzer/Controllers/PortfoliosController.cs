@@ -62,6 +62,21 @@ namespace PortfolioAnalyzer.Controllers
                     .ThenInclude(p => p.AssetClass)
                 .FirstOrDefaultAsync(p => p.Id == id);
 
+            // Asset Allocation data for pie chart
+            Dictionary<string, int> assetAllocation = new Dictionary<string, int>();
+            foreach(PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
+            {
+                if (!assetAllocation.ContainsKey(ps.AssetClass.Name))
+                {
+                    assetAllocation[ps.AssetClass.Name] = 0;
+                }
+
+                assetAllocation[ps.AssetClass.Name] += ps.Weight;
+            }
+            // Convert dictionary to json and assign to viewModel
+            viewModel.AssetAllocationKeys = JsonConvert.SerializeObject(assetAllocation.Keys);
+            viewModel.AssetAllocationValues = JsonConvert.SerializeObject(assetAllocation.Values);
+
             // Get the prices for all the securities in the portfolio
             if (timePeriod != null)
             {

@@ -31,33 +31,28 @@ namespace PortfolioAnalyzer.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         private string GetToken() => _config.GetValue<string>("Tokens:IEXCloudSK");
 
-        public WatchlistsController(ApplicationDbContext context)
-        {
-            _context = context;
-        }
-
         // GET: Watchlists
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Watchlists.Include(w => w.User);
-            return View(await applicationDbContext.ToListAsync());
+            var user = await GetCurrentUserAsync();
+
+            var watchlists = await _context.Watchlists
+                .Where(w => w.UserId == user.Id)
+                .Include(w => w.User).ToListAsync();
+
+            return View(watchlists);
         }
 
         // GET: Watchlists/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var watchlist = await _context.Watchlists
                 .Include(w => w.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (watchlist == null)
-            {
-                return NotFound();
-            }
+
+            if (watchlist == null) return NotFound();
 
             return View(watchlist);
         }
@@ -89,16 +84,11 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Watchlists/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var watchlist = await _context.Watchlists.FindAsync(id);
-            if (watchlist == null)
-            {
-                return NotFound();
-            }
+
+            if (watchlist == null) return NotFound();
             ViewData["UserId"] = new SelectList(_context.ApplicationUsers, "Id", "Id", watchlist.UserId);
             return View(watchlist);
         }
@@ -110,10 +100,7 @@ namespace PortfolioAnalyzer.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Name,Description,UserId")] Watchlist watchlist)
         {
-            if (id != watchlist.Id)
-            {
-                return NotFound();
-            }
+            if (id != watchlist.Id) return NotFound();
 
             if (ModelState.IsValid)
             {
@@ -142,18 +129,13 @@ namespace PortfolioAnalyzer.Controllers
         // GET: Watchlists/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var watchlist = await _context.Watchlists
                 .Include(w => w.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (watchlist == null)
-            {
-                return NotFound();
-            }
+
+            if (watchlist == null) return NotFound();
 
             return View(watchlist);
         }

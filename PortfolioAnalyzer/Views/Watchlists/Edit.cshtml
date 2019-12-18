@@ -39,7 +39,7 @@
                             <tr>
                                 <td>
                                     <input asp-for="@Model.WatchlistSecurities[i].Security.Ticker" class="form-control" />
-                                </td>    
+                                </td>
                             </tr>
                         }
                     }
@@ -63,3 +63,64 @@
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script>
+    const inputTable = document.querySelector(".inputTableBody");
+    const addButton = document.querySelector(".addSecurityButton");
+
+    addButton.addEventListener("click", event => {
+        event.preventDefault();
+        addSecurity();
+    })
+
+    function addSecurity() {
+        const i = inputTable.childElementCount;
+
+        if (i < 10) {
+            const newInputRow = document.createElement("tr");
+            newInputRow.innerHTML = 
+                `<td>
+                    <input class="form-control" type="text" id="WatchlistSecurities_${i}__Security_Ticker" name="WatchlistSecurities[${i}].Security.Ticker" value="" />
+                 </td>`
+
+            inputTable.appendChild(newInputRow);
+        }
+    }
+</script>
+
+@*<script>
+    const inputTable = document.querySelector(".inputTableBody");
+    const addButton = document.querySelector(".addSecurityButton");
+
+    addButton.addEventListener("click", event => {
+        event.preventDefault();
+        const i = inputTable.childElementCount;
+
+        if (i < 9) {
+            const newInputRow = document.createElement("tr")
+            newInputRow.innerHTML =
+                `<td>
+                    <input class="form-control" type="text" id="PortfolioSecurities_${i}__Security_Ticker" name="PortfolioSecurities[${i}].Security.Ticker" value="" />
+                 </td>
+                 <td>
+                    <input class="form-control" type="number" id="PortfolioSecurities_${i}__Weight" name="PortfolioSecurities[${i}].Weight" value="" />
+                 </td>
+                 <td>
+                    <select class="form-control" id="PortfolioSecurities_${i}__AssetClassId" name="PortfolioSecurities[${i}].AssetClassId">
+                        <option value="1">Equities</option>
+                        <option value="2">Fixed Income</option>
+                        <option value="3">Commodities</option>
+                        <option value="4">Precious Metals</option>
+                        <option value="5">Real Estate</option>
+                        <option value="6">Alternatives</option>
+                        <option value="7">Cash</option>
+                    </select>
+                 </td>`
+
+            inputTable.appendChild(newInputRow);
+        }
+
+    })
+
+</script>*@
+

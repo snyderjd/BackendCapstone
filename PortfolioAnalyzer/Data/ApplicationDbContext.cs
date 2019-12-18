@@ -17,6 +17,8 @@ namespace PortfolioAnalyzer.Data
         public DbSet<Security> Securities { get; set; }
         public DbSet<PortfolioSecurity> PortfolioSecurities { get; set; }
         public DbSet<AssetClass> AssetClasses { get; set; }
+        public DbSet<Watchlist> Watchlists { get; set; }
+        public DbSet<WatchlistSecurity> WatchlistSecurities {get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -30,6 +32,8 @@ namespace PortfolioAnalyzer.Data
             modelBuilder.Entity<Security>().ToTable("Security");
             modelBuilder.Entity<PortfolioSecurity>().ToTable("PortfolioSecurity");
             modelBuilder.Entity<AssetClass>().ToTable("AssetClass");
+            modelBuilder.Entity<Watchlist>().ToTable("Watchlist");
+            modelBuilder.Entity<WatchlistSecurity>().ToTable("WatchlistSecurity");
 
             modelBuilder.Entity<Portfolio>()
                 .Property(p => p.DateCreated)
@@ -51,6 +55,18 @@ namespace PortfolioAnalyzer.Data
             modelBuilder.Entity<AssetClass>()
                 .HasMany(ac => ac.PortfolioSecurities)
                 .WithOne(ps => ps.AssetClass)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Restrict deletion of related Security when WatchlistSecurity entry is removed
+            modelBuilder.Entity<Security>()
+                .HasMany(s => WatchlistSecurities)
+                .WithOne(ws => ws.Security)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Restrict delection of related Watchlist when WatchlistSecurity entry is removed
+            modelBuilder.Entity<Watchlist>()
+                .HasMany(w => w.WatchlistSecurities)
+                .WithOne(ws => ws.Watchlist)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Add seed data to the database
@@ -187,6 +203,38 @@ namespace PortfolioAnalyzer.Data
                     SecurityId = 3,
                     Weight = 40,
                     AssetClassId = 1
+                }
+            );
+
+            // Create seed data for Watchlist table
+            modelBuilder.Entity<Watchlist>().HasData(
+                new Watchlist()
+                {
+                    Id = 1,
+                    UserId = "00000000-ffff-ffff-ffff-fffffffffff1",
+                    Name = "Joe's first watchlist",
+                    Description = "Optional description goes here"
+            });
+
+            // Create seed data for WatchlistSecurity table
+            modelBuilder.Entity<WatchlistSecurity>().HasData(
+                new WatchlistSecurity()
+                {
+                    Id = 1,
+                    WatchlistId = 1,
+                    SecurityId = 1
+                },
+                new WatchlistSecurity()
+                {
+                    Id = 2,
+                    WatchlistId = 1,
+                    SecurityId = 2
+                },
+                new WatchlistSecurity()
+                {
+                    Id = 3,
+                    WatchlistId = 1,
+                    SecurityId = 3
                 }
             );
 

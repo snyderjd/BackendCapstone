@@ -12,6 +12,7 @@ namespace PortfolioAnalyzer.Models
         public Watchlist Watchlist { get; set; }
         public int? SecurityId { get; set; }
         public SecurityInput Security { get; set; }
+        public bool HasSecurity { get; set; }
     }
 }
 

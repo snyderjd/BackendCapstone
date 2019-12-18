@@ -64,6 +64,7 @@
             <div>
                 <button class="btn btn-primary addSecurityButton">Add Security</button>
             </div>
+            <br />
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
@@ -87,7 +88,7 @@
         event.preventDefault();
         const i = inputTable.childElementCount;
 
-        if (i < 9) {
+        if (i < 10) {
             const newInputRow = document.createElement("tr")
             newInputRow.innerHTML =
                 `<td>

@@ -293,10 +293,11 @@ namespace PortfolioAnalyzer.Controllers
 
             var watchlist = await _context.Watchlists
                 .Include(w => w.User)
-                .FirstOrDefaultAsync(m => m.Id == id);
+                .Include(w => w.WatchlistSecurities)
+                    .ThenInclude(ws => ws.Security)
+                .FirstOrDefaultAsync(w => w.Id == id);
 
             if (watchlist == null) return NotFound();
-
             return View(watchlist);
         }
 
@@ -306,7 +307,14 @@ namespace PortfolioAnalyzer.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var watchlist = await _context.Watchlists.FindAsync(id);
-            _context.Watchlists.Remove(watchlist);
+
+            // Get all the watchlist's WatchlistSecurities and Remove them
+            var watchlistSecurities = await _context.WatchlistSecurities
+                .Where(ws => ws.WatchlistId == id).ToListAsync();
+
+            watchlistSecurities.ForEach(ws => _context.WatchlistSecurities.Remove(ws));
+
+            _context.Watchlists.Remove(watchlist); // Remove the watchlist
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

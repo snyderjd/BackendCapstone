@@ -63,8 +63,13 @@ namespace PortfolioAnalyzer.Controllers
             if (viewModel.Watchlist == null) return NotFound();
 
             // Get quotes for all the WatchlistSecurities and set in the viewModel
+            viewModel.Quotes = await GetQuotes(viewModel.Watchlist.WatchlistSecurities);
 
-             
+            // Multiply YTD % Change by 100 for each quote
+            foreach (IEXQuote quote in viewModel.Quotes)
+            {
+                quote.YTDChange = quote.YTDChange * 100;
+            }
 
             return View(viewModel);
         }
@@ -329,16 +334,61 @@ namespace PortfolioAnalyzer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public async Task<IActionResult> GetQuotes(List<WatchlistSecurity> watchlistSecurities)
+        private async Task<ICollection<IEXQuote>> GetQuotes(ICollection<WatchlistSecurity> watchlistSecurities)
         {
             string token = GetToken();
             var client = _clientFactory.CreateClient();
+            ICollection<IEXQuote> quotes = new List<IEXQuote>();
 
             foreach (WatchlistSecurity ws in watchlistSecurities)
             {
+                var request = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://cloud.iexapis.com/stable/stock/{ws.Security.Ticker}/quote?token={token}");
+                var response = await client.SendAsync(request);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    // Convert the quote into IEXQuote and add to the list of quotes
+                    var json = await response.Content.ReadAsStreamAsync();
+                    IEXQuote quote = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXQuote>(json);
+                    quotes.Add(quote);
+                }
             }
+
+            return quotes;
         }
+
+        //// Gets the prices for all of the securities in a portfolio from IEX Cloud
+        //private async Task<ICollection<PortfolioSecurity>> GetPrices(PortfolioDetailsViewModel viewModel)
+        //{
+        //    string token = GetToken();
+        //    var client = _clientFactory.CreateClient();
+        //    var timePeriod = viewModel.TimePeriod;
+
+        //    foreach (PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
+        //    {
+        //        var request = new HttpRequestMessage(HttpMethod.Get,
+        //            $"https://cloud.iexapis.com/stable/stock/{ps.Security.Ticker}/chart/{timePeriod}/?chartCloseOnly=true&chartInterval=21&token={token}");
+        //        var response = await client.SendAsync(request);
+
+        //        if (response.IsSuccessStatusCode)
+        //        {
+        //            // Convert the response into price objects and save as a list to the PS's List<Price>
+        //            var json = await response.Content.ReadAsStreamAsync();
+        //            List<IEXPrice> IEXPrices = await System.Text.Json.JsonSerializer.DeserializeAsync<List<IEXPrice>>(json);
+        //            foreach (IEXPrice p in IEXPrices)
+        //            {
+        //                ps.Prices.Add(new Price
+        //                {
+        //                    Date = p.Date,
+        //                    AdjClose = p.Close
+        //                });
+        //            }
+        //        }
+        //    }
+
+        //    return viewModel.Portfolio.PortfolioSecurities;
+        //}
 
         private bool WatchlistExists(int id)
         {

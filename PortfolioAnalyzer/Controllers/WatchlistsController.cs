@@ -50,13 +50,23 @@ namespace PortfolioAnalyzer.Controllers
         {
             if (id == null) return NotFound();
 
-            var watchlist = await _context.Watchlists
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+            var viewModel = new WatchlistDetailsViewModel();
+
+            viewModel.Watchlist = await _context.Watchlists
                 .Include(w => w.User)
+                .Include(w => w.WatchlistSecurities)
+                    .ThenInclude(ws => ws.Security)
                 .FirstOrDefaultAsync(m => m.Id == id);
 
-            if (watchlist == null) return NotFound();
+            if (viewModel.Watchlist == null) return NotFound();
 
-            return View(watchlist);
+            // Get quotes for all the WatchlistSecurities and set in the viewModel
+
+             
+
+            return View(viewModel);
         }
 
         // GET: Watchlists/Create
@@ -317,6 +327,17 @@ namespace PortfolioAnalyzer.Controllers
             _context.Watchlists.Remove(watchlist); // Remove the watchlist
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public async Task<IActionResult> GetQuotes(List<WatchlistSecurity> watchlistSecurities)
+        {
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+
+            foreach (WatchlistSecurity ws in watchlistSecurities)
+            {
+
+            }
         }
 
         private bool WatchlistExists(int id)

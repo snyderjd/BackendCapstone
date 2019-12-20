@@ -8,14 +8,14 @@ namespace PortfolioAnalyzer.Models.IEXModels
 {
     public class IEXNewsItem
     {
-        [JsonPropertyName("date")]
+        [JsonPropertyName("datetime")]
         public double DateNumber { get; set; }
         public DateTime Date
         {
             get
             {
                 DateTime beginDate = new System.DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
-                return beginDate.AddMilliseconds(DateNumber);
+                return beginDate.AddMilliseconds(DateNumber).ToLocalTime();
             }
         }
 

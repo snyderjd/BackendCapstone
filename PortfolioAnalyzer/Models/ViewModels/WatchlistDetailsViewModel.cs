@@ -10,6 +10,7 @@ namespace PortfolioAnalyzer.Models.ViewModels
     {
         public Watchlist Watchlist { get; set; }
         public ICollection<IEXQuote> Quotes { get; set; } = new List<IEXQuote>();
+        public ICollection<IEXNewsItem> NewsItems { get; set; } = new List<IEXNewsItem>();
 
     }
 }

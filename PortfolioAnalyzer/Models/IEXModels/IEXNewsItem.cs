@@ -14,9 +14,8 @@ namespace PortfolioAnalyzer.Models.IEXModels
         {
             get
             {
-                DateTime beginDate = new DateTime(1970, 1, 1, 0, 0, 0, 0);
-                DateTime endDate = beginDate.AddMilliseconds(DateNumber);
-                return endDate;
+                DateTime beginDate = new System.DateTime(1970, 1, 1, 0, 0, 0, 0, DateTimeKind.Utc);
+                return beginDate.AddMilliseconds(DateNumber);
             }
         }
 

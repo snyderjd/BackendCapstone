@@ -72,6 +72,39 @@
             }
         </tbody>
     </table>
+
+    <div class="container">
+        @foreach (var newsItem in Model.NewsItems)
+        {
+            <div class="row">
+                <div class="col-2">
+                    <a href="@newsItem.Url">
+                        <img src="@newsItem.Image" class="img-thumbnail" />
+                    </a>
+                </div>
+                <div class="col-10">
+                    <h2>@newsItem.Headline</h2>
+                    <p>@newsItem.Source - @newsItem.Date</p>
+                    <a href="@newsItem.Url">Go To Article</a>
+                    <p>@newsItem.Summary</p>
+                </div>
+            </div>
+        }
+    </div>
+
+    @*<div class="container">
+        <div class="row">
+            <div class="col-sm">
+                One of three columns
+            </div>
+            <div class="col-sm">
+                One of three columns
+            </div>
+            <div class="col-sm">
+                One of three columns
+            </div>
+        </div>
+    </div>*@
 </div>
 <div>
     <a asp-action="Edit" asp-route-id="@Model.Watchlist.Id">Edit</a> |

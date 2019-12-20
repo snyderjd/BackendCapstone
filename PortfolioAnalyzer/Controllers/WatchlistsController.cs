@@ -71,6 +71,9 @@ namespace PortfolioAnalyzer.Controllers
                 quote.YTDChange = quote.YTDChange * 100;
             }
 
+            // Get news items for each WatchlistSecurity and save to the viewModel
+            viewModel.NewsItems = await GetNewsItems(viewModel.Watchlist.WatchlistSecurities);
+
             return View(viewModel);
         }
 
@@ -358,37 +361,31 @@ namespace PortfolioAnalyzer.Controllers
             return quotes;
         }
 
-        //// Gets the prices for all of the securities in a portfolio from IEX Cloud
-        //private async Task<ICollection<PortfolioSecurity>> GetPrices(PortfolioDetailsViewModel viewModel)
-        //{
-        //    string token = GetToken();
-        //    var client = _clientFactory.CreateClient();
-        //    var timePeriod = viewModel.TimePeriod;
+        private async Task<ICollection<IEXNewsItem>> GetNewsItems(ICollection<WatchlistSecurity> watchlistSecurities)
+        {
+            string token = GetToken();
+            var client = _clientFactory.CreateClient();
+            ICollection<IEXNewsItem> newsItems = new List<IEXNewsItem>();
 
-        //    foreach (PortfolioSecurity ps in viewModel.Portfolio.PortfolioSecurities)
-        //    {
-        //        var request = new HttpRequestMessage(HttpMethod.Get,
-        //            $"https://cloud.iexapis.com/stable/stock/{ps.Security.Ticker}/chart/{timePeriod}/?chartCloseOnly=true&chartInterval=21&token={token}");
-        //        var response = await client.SendAsync(request);
+            foreach(WatchlistSecurity ws in watchlistSecurities)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get,
+                    $"https://cloud.iexapis.com/stable/stock/{ws.Security.Ticker}/news/last/2?token={token}");
+                var response = await client.SendAsync(request);
 
-        //        if (response.IsSuccessStatusCode)
-        //        {
-        //            // Convert the response into price objects and save as a list to the PS's List<Price>
-        //            var json = await response.Content.ReadAsStreamAsync();
-        //            List<IEXPrice> IEXPrices = await System.Text.Json.JsonSerializer.DeserializeAsync<List<IEXPrice>>(json);
-        //            foreach (IEXPrice p in IEXPrices)
-        //            {
-        //                ps.Prices.Add(new Price
-        //                {
-        //                    Date = p.Date,
-        //                    AdjClose = p.Close
-        //                });
-        //            }
-        //        }
-        //    }
+                if (response.IsSuccessStatusCode)
+                {
+                    // Convert the response into a list of news items
+                    var json = await response.Content.ReadAsStreamAsync();
+                    List<IEXNewsItem> IEXNewsItems = await System.Text.Json.JsonSerializer.DeserializeAsync<List<IEXNewsItem>>(json);
 
-        //    return viewModel.Portfolio.PortfolioSecurities;
-        //}
+                    // Iterate over the new list of news items and add them to the newsItems list
+                    IEXNewsItems.ForEach(newsItem => newsItems.Add(newsItem));
+                }
+            }
+
+            return newsItems;
+        }
 
         private bool WatchlistExists(int id)
         {

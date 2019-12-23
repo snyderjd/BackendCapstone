@@ -21,10 +21,15 @@ namespace PortfolioAnalyzer.Models.IEXModels
         [JsonPropertyName("week52Low")]
         public decimal Week52Low { get; set; }
         [JsonPropertyName("ytdChange")]
+
         public decimal YTDChange { get; set; }
         [JsonPropertyName("peRatio")]
         public decimal PERatio { get; set; }
+        
     }
 }
+
+
+
 
 

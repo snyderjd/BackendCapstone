@@ -9,6 +9,8 @@ using PortfolioAnalyzer.Models;
 using System.Globalization;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
+using PortfolioAnalyzer.Models.ViewModels;
+using PortfolioAnalyzer.Models.IEXModels;
 
 namespace PortfolioAnalyzer.Controllers
 {
@@ -26,7 +28,7 @@ namespace PortfolioAnalyzer.Controllers
         }
         private string GetToken() => _config.GetValue<string>("Tokens:IEXCloudSK");
 
-        public IActionResult Index()
+        public IActionResult Index(string ticker)
         {
             return View();
         }
@@ -35,7 +37,37 @@ namespace PortfolioAnalyzer.Controllers
         {
             var token = GetToken();
             var client = _clientFactory.CreateClient();
-            
+            var viewModel = new HomeViewModel();
+
+            // If a ticker is passed in, send a request to IEXCloud to retrieve a quote and assign it to the viewModel
+            if (ticker != null)
+            {
+                var request = new HttpRequestMessage(HttpMethod.Get, $"https://cloud.iexapis.com/stable/stock/{ticker}/quote?token={token}");
+                var response = await client.SendAsync(request);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    // Convert the quote into IEXHomeQuote and add to the list of quotes
+                    var json = await response.Content.ReadAsStreamAsync();
+                    viewModel.Quote = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXHomeQuote>(json);
+                }
+
+            }
+
+            //foreach (WatchlistSecurity ws in watchlistSecurities)
+            //{
+            //    var request = new HttpRequestMessage(HttpMethod.Get,
+            //        $"https://cloud.iexapis.com/stable/stock/{ws.Security.Ticker}/quote?token={token}");
+            //    var response = await client.SendAsync(request);
+
+            //    if (response.IsSuccessStatusCode)
+            //    {
+            //        // Convert the quote into IEXQuote and add to the list of quotes
+            //        var json = await response.Content.ReadAsStreamAsync();
+            //        IEXQuote quote = await System.Text.Json.JsonSerializer.DeserializeAsync<IEXQuote>(json);
+            //        quotes.Add(quote);
+            //    }
+            //}
 
         }
 

@@ -8,6 +8,6 @@ namespace PortfolioAnalyzer.Models.ViewModels
 {
     public class HomeViewModel
     {
-        public IEXHomeQuote Quote { get; set; }
+        public IEXHomeQuote Quote { get; set; } = new IEXHomeQuote();
     }
 }

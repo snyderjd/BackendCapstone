@@ -3,6 +3,26 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    <h1 class="display-4">Portfolio Review</h1>
+</div>
+
+@*<form asp-action="AddSecurity" method="get">
+    <div class="form-actions no-color">
+        <p>
+            Can't find what you're looking for? Add a security by ticker:
+            <input type="text" name="NewTicker" value="@ViewData["NewTicker"]" />
+            <input type="submit" value="AddSecurity" class="btn btn-primary" />
+        </p>
+        <p>@ViewData["SavedMessage"]</p>
+    </div>
+</form>*@
+
+<div>
+    <form asp-action="GetFullQuote" method="get">
+        <div class="form-actions no-color">
+            <h3>Get a Quote:</h3>
+            <input type="text" name="ticker" value="@ViewData["Ticker"]"/>
+            <input type="submit" value="Get Quote" class="btn btn-primary"/>
+        </div>
+    </form>
 </div>

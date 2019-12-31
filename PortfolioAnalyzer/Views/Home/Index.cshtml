@@ -28,3 +28,38 @@
         </div>
     </form>
 </div>
+
+<div>
+    <h4>@Model.Quote.CompanyName (@Model.Quote.Symbol)</h4>
+    <h5>@Model.Quote.LatestPrice</h5>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">Previous Close</dt>
+        <dd class="col-sm-10">@Model.Quote.PreviousClose</dd>
+    </dl>
+</div>
+
+@*<div>
+    <h4>Security</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Ticker)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Ticker)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Description)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Description)
+        </dd>
+    </dl>
+</div>*@

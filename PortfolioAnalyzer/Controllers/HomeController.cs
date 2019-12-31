@@ -35,6 +35,8 @@ namespace PortfolioAnalyzer.Controllers
             if (ticker != null)
             {
                 viewModel.Quote = await GetFullQuote(ticker);
+                // Format Quote numbers as necessary
+
                 return View(viewModel);
             }
 

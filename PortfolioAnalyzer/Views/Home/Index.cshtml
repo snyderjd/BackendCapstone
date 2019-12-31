@@ -1,4 +1,6 @@
-﻿@{
+﻿@model PortfolioAnalyzer.Models.ViewModels.HomeViewModel
+
+@{
     ViewData["Title"] = "Home Page";
 }
 
@@ -7,22 +9,22 @@
 </div>
 
 @*<form asp-action="AddSecurity" method="get">
-    <div class="form-actions no-color">
-        <p>
-            Can't find what you're looking for? Add a security by ticker:
-            <input type="text" name="NewTicker" value="@ViewData["NewTicker"]" />
-            <input type="submit" value="AddSecurity" class="btn btn-primary" />
-        </p>
-        <p>@ViewData["SavedMessage"]</p>
-    </div>
-</form>*@
+        <div class="form-actions no-color">
+            <p>
+                Can't find what you're looking for? Add a security by ticker:
+                <input type="text" name="NewTicker" value="@ViewData["NewTicker"]" />
+                <input type="submit" value="AddSecurity" class="btn btn-primary" />
+            </p>
+            <p>@ViewData["SavedMessage"]</p>
+        </div>
+    </form>*@
 
 <div>
-    <form asp-action="GetFullQuote" method="get">
+    <form asp-action="Index" method="get">
         <div class="form-actions no-color">
             <h3>Get a Quote:</h3>
-            <input type="text" name="ticker" value="@ViewData["Ticker"]"/>
-            <input type="submit" value="Get Quote" class="btn btn-primary"/>
+            <input type="text" name="ticker" value="@ViewData["Ticker"]" />
+            <input type="submit" value="Get Quote" class="btn btn-primary" />
         </div>
     </form>
 </div>

@@ -39,8 +39,12 @@ namespace PortfolioAnalyzer.Controllers
 
                 return View(viewModel);
             }
+            else
+            {
+                ViewData["Ticker"] = "";
+                return View(viewModel);
+            }
 
-            return View(viewModel);
         }
 
         private async Task<IEXHomeQuote> GetFullQuote(string ticker)

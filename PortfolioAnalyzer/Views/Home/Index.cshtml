@@ -8,17 +8,6 @@
     <h1 class="display-4">Portfolio Review</h1>
 </div>
 
-@*<form asp-action="AddSecurity" method="get">
-        <div class="form-actions no-color">
-            <p>
-                Can't find what you're looking for? Add a security by ticker:
-                <input type="text" name="NewTicker" value="@ViewData["NewTicker"]" />
-                <input type="submit" value="AddSecurity" class="btn btn-primary" />
-            </p>
-            <p>@ViewData["SavedMessage"]</p>
-        </div>
-    </form>*@
-
 <div>
     <form asp-action="Index" method="get">
         <div class="form-actions no-color">
@@ -28,3 +17,49 @@
         </div>
     </form>
 </div>
+
+@if ((string)ViewData["Ticker"] != "")
+{
+    <div>
+        <hr />
+        <h4>@Model.Quote.CompanyName (@Model.Quote.Symbol)</h4>
+        <h5>$ @Model.Quote.LatestPrice (@Model.Quote.Change %)</h5>
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <dl class="row">
+                        <dt class="col-sm-4">Previous Close</dt>
+                        <dd class="col-sm-8">@Model.Quote.PreviousClose</dd>
+                        <dt class="col-sm-4">Open</dt>
+                        <dd class="col-sm-8">@Model.Quote.Open</dd>
+                        <dt class="col-sm-4">Bid</dt>
+                        <dd class="col-sm-8">@Model.Quote.IEXBidPrice x @Model.Quote.IEXBidSize</dd>
+                        <dt class="col-sm-4">Ask</dt>
+                        <dd class="col-sm-8">@Model.Quote.IEXAskPrice x @Model.Quote.IEXAskSize</dd>
+                        <dt class="col-sm-4">Volume</dt>
+                        <dd class="col-sm-8">@Model.Quote.Volume.ToString("N0")</dd>
+                        <dt class="col-sm-4">Average Volume</dt>
+                        <dd class="col-sm-8">@Model.Quote.AvgTotalVolume.ToString("N0")</dd>
+                    </dl>
+                </div>
+                <div class="col">
+                    <dl class="row">
+                        <dt class="col-sm-4">Market Cap</dt>
+                        <dd class="col-sm-8">$ @Model.Quote.MarketCap B</dd>
+                        <dt class="col-sm-4">52 Week High</dt>
+                        <dd class="col-sm-8">@Model.Quote.Week52High</dd>
+                        <dt class="col-sm-4">52 Week Low</dt>
+                        <dd class="col-sm-8">@Model.Quote.Week52Low</dd>
+                        <dt class="col-sm-4">YTD Change</dt>
+                        <dd class="col-sm-8">@Model.Quote.YTDChange %</dd>
+                        <dt class="col-sm-4">P/E Ratio</dt>
+                        <dd class="col-sm-8">@Model.Quote.PERatio x</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}
+
+

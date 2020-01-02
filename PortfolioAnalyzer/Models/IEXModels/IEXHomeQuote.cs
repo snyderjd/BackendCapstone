@@ -15,17 +15,17 @@ namespace PortfolioAnalyzer.Models.IEXModels
         [JsonPropertyName("calculationPrice")]
         public string CalculationPrice { get; set; }
         [JsonPropertyName("open")]
-        public decimal Open { get; set; }
+        public decimal? Open { get; set; }
         [JsonPropertyName("openTime")]
-        public long OpenTime { get; set; }
+        public long? OpenTime { get; set; }
         [JsonPropertyName("close")]
-        public decimal Close { get; set; }
+        public decimal? Close { get; set; }
         [JsonPropertyName("closeTime")]
-        public long CloseTime { get; set; }
+        public long? CloseTime { get; set; }
         [JsonPropertyName("high")]
-        public decimal High { get; set; }
+        public decimal? High { get; set; }
         [JsonPropertyName("low")]
-        public decimal Low { get; set; }
+        public decimal? Low { get; set; }
         [JsonPropertyName("latestPrice")]
         public decimal LatestPrice { get; set; }
         [JsonPropertyName("latestSource")]
@@ -45,17 +45,17 @@ namespace PortfolioAnalyzer.Models.IEXModels
         [JsonPropertyName("iexLastUpdate")]
         public long IEXLastUpdated { get; set; }
         [JsonPropertyName("delayedPrice")]
-        public decimal DelayedPrice { get; set; }
+        public decimal? DelayedPrice { get; set; }
         [JsonPropertyName("delayedPriceTime")]
-        public long DelayedPriceTime { get; set; }
+        public long? DelayedPriceTime { get; set; }
         [JsonPropertyName("extendedPrice")]
-        public decimal ExtendedPrice { get; set; }
+        public decimal? ExtendedPrice { get; set; }
         [JsonPropertyName("extendedChange")]
-        public decimal ExtendedChange { get; set; }
+        public decimal? ExtendedChange { get; set; }
         [JsonPropertyName("extendedChangePercent")]
-        public decimal ExtendedChangePercent { get; set; }
+        public decimal? ExtendedChangePercent { get; set; }
         [JsonPropertyName("extendedPriceTime")]
-        public long ExtendedPriceTime { get; set; }
+        public long? ExtendedPriceTime { get; set; }
         [JsonPropertyName("previousClose")]
         public decimal PreviousClose { get; set; }
         [JsonPropertyName("previousVolume")]

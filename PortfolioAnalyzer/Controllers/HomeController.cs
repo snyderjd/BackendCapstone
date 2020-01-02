@@ -36,6 +36,13 @@ namespace PortfolioAnalyzer.Controllers
             {
                 viewModel.Quote = await GetFullQuote(ticker);
                 // Format Quote numbers as necessary
+                Decimal.Round(viewModel.Quote.LatestPrice, 2);
+                Decimal.Round(viewModel.Quote.Change, 2);
+                viewModel.Quote.MarketCap = viewModel.Quote.MarketCap / 1_000_000_000;
+                Decimal.Round(viewModel.Quote.Week52High, 2);
+                Decimal.Round(viewModel.Quote.Week52Low, 2);
+                viewModel.Quote.YTDChange = viewModel.Quote.YTDChange * 100;
+                Decimal.Round(viewModel.Quote.YTDChange, 2);
 
                 return View(viewModel);
             }

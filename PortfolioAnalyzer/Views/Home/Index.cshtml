@@ -37,15 +37,15 @@
                         <dt class="col-sm-4">Ask</dt>
                         <dd class="col-sm-8">@Model.Quote.IEXAskPrice x @Model.Quote.IEXAskSize</dd>
                         <dt class="col-sm-4">Volume</dt>
-                        <dd class="col-sm-8">@Model.Quote.Volume</dd>
+                        <dd class="col-sm-8">@Model.Quote.Volume.ToString("N0")</dd>
                         <dt class="col-sm-4">Average Volume</dt>
-                        <dd class="col-sm-8">@Model.Quote.AvgTotalVolume</dd>
+                        <dd class="col-sm-8">@Model.Quote.AvgTotalVolume.ToString("N0")</dd>
                     </dl>
                 </div>
                 <div class="col">
                     <dl class="row">
                         <dt class="col-sm-4">Market Cap</dt>
-                        <dd class="col-sm-8">@Model.Quote.MarketCap</dd>
+                        <dd class="col-sm-8">$ @Model.Quote.MarketCap B</dd>
                         <dt class="col-sm-4">52 Week High</dt>
                         <dd class="col-sm-8">@Model.Quote.Week52High</dd>
                         <dt class="col-sm-4">52 Week Low</dt>

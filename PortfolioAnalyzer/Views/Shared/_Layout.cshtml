@@ -9,35 +9,33 @@
 </head>
 <body>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Portfolio Review</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div>
-                    <form asp-action="Index" method="get">
-                        <div class="form-actions no-color">
-                            <input type="text" name="ticker" placeholder="Get a quote by ticker" value="@ViewData["Ticker"]" />
-                            <input type="submit" value="Get Quote" class="btn btn-primary" />
-                        </div>
-                    </form>
-                </div>
+                <form class=".form-inline" asp-action="Index" method="get">
+                    <div class="form-actions no-color">
+                        <input type="text" name="ticker" placeholder="Get a quote by ticker" value="@ViewData["Ticker"]" />
+                        <input type="submit" value="Get Quote" class="btn btn-light" />
+                    </div>
+                </form>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Portfolios" asp-action="Index">Portfolios</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Portfolios" asp-action="Index">Portfolios</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Securities" asp-action="Index">Securities</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Securities" asp-action="Index">Securities</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Watchlists" asp-action="Index">Watchlists</a>
+                            <a class="nav-link text-light" asp-area="" asp-controller="Watchlists" asp-action="Index">Watchlists</a>
                         </li>
                     </ul>
                 </div>

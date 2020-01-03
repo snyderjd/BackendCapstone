@@ -16,6 +16,14 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
+                <div>
+                    <form asp-action="Index" method="get">
+                        <div class="form-actions no-color">
+                            <input type="text" name="ticker" placeholder="Get a quote by ticker" value="@ViewData["Ticker"]" />
+                            <input type="submit" value="Get Quote" class="btn btn-primary" />
+                        </div>
+                    </form>
+                </div>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
@@ -33,6 +41,7 @@
                         </li>
                     </ul>
                 </div>
+
             </div>
         </nav>
     </header>
@@ -44,7 +53,7 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2019 - PortfolioAnalyzer - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2019 - Portfolio Review - <a href="https://iexcloud.io">Data provided by IEX Cloud</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

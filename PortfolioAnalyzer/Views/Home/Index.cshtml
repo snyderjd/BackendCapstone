@@ -8,15 +8,7 @@
     <h1 class="display-4">Portfolio Review</h1>
 </div>
 
-<div>
-    <form asp-action="Index" method="get">
-        <div class="form-actions no-color">
-            <h3>Get a Quote:</h3>
-            <input type="text" name="ticker" value="@ViewData["Ticker"]" />
-            <input type="submit" value="Get Quote" class="btn btn-primary" />
-        </div>
-    </form>
-</div>
+
 
 @if ((string)ViewData["Ticker"] != "")
 {

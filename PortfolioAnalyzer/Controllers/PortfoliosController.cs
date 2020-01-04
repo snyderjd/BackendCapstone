@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -36,6 +37,7 @@ namespace PortfolioAnalyzer.Controllers
         private Task<ApplicationUser> GetCurrentUserAsync() => _userManager.GetUserAsync(HttpContext.User);
         private string GetToken() => _config.GetValue<string>("Tokens:IEXCloudSK");
 
+        [Authorize]
         // GET: Portfolios
         public async Task<IActionResult> Index()
         {

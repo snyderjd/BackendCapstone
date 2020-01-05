@@ -24,6 +24,15 @@
         </dd>
     </dl>
 
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model.Watchlist.Id">
+            <input type="button" class="btn btn-secondary" value="Edit" />
+        </a>
+        <a asp-action="Index">
+            <input type="button" class="btn btn-secondary" value="Back to List" />
+        </a>
+    </div>
+
     <h4>Securities</h4>
     <hr />
     <table class="table">
@@ -93,7 +102,4 @@
     </div>
 
 </div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model.Watchlist.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
-</div>
+

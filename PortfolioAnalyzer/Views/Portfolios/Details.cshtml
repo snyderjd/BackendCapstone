@@ -33,8 +33,12 @@
             </dd>
         </dl>
         <div>
-            <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id">Edit</a> |
-            <a asp-action="Index">Back to List</a>
+            <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id">
+                <input type="button" class="btn btn-secondary" value="Edit" />
+            </a>
+            <a asp-action="Index">Back to List
+                <input type="button" class="btn btn-secondary" value="Edit" />
+            </a>
         </div>
     </div>
     <div>
@@ -58,7 +62,9 @@
                         <td>@Html.DisplayFor(modelItem => ps.Weight) %</td>
                         <td>@Html.DisplayFor(modelItem => ps.AssetClass.Name)</td>
                         <td>
-                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">Details</a>
+                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">
+                                <input type="button" class="btn btn-secondary" value="Details" />
+                            </a>
                         </td>
                     </tr>
                 }

@@ -58,7 +58,9 @@
                         <td>@Html.DisplayFor(modelItem => ps.Weight) %</td>
                         <td>@Html.DisplayFor(modelItem => ps.AssetClass.Name)</td>
                         <td>
-                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">Details</a>
+                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">
+                                <input type="button" class="btn btn-secondary" value="Details" />
+                            </a>
                         </td>
                     </tr>
                 }
@@ -69,6 +71,8 @@
     <form asp-action="Delete">
         <input type="hidden" asp-for="Id" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <a asp-action="Index">
+            <input type="button" class="btn btn-secondary" value="Back to List" />
+        </a>
     </form>
 </div>

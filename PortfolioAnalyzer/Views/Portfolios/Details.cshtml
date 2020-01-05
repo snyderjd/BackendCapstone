@@ -33,10 +33,10 @@
             </dd>
         </dl>
         <div>
-            <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id">
+            <a asp-action="Edit" asp-route-id="@Model.Portfolio.Id" class="link-button">
                 <input type="button" class="btn btn-secondary" value="Edit" />
             </a>
-            <a asp-action="Index">Back to List
+            <a asp-action="Index" class="link-button">
                 <input type="button" class="btn btn-secondary" value="Edit" />
             </a>
         </div>
@@ -62,8 +62,8 @@
                         <td>@Html.DisplayFor(modelItem => ps.Weight) %</td>
                         <td>@Html.DisplayFor(modelItem => ps.AssetClass.Name)</td>
                         <td>
-                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id">
-                                <input type="button" class="btn btn-secondary" value="Details" />
+                            <a asp-action="Details" asp-controller="Securities" asp-route-id="@ps.Security.Id" class="link-button">
+                                <input type="button" class="btn btn-sm btn-secondary" value="Details" />
                             </a>
                         </td>
                     </tr>
@@ -78,9 +78,10 @@
 
 
 <div>
+    <h5>Show Historical Performance: </h5>
     @Html.ActionLink("1 Year", "Details", new { timePeriod = "1y" }) |
     @Html.ActionLink("2 Years", "Details", new { timePeriod = "2y" }) |
-    @Html.ActionLink("5 Years", "Details", new { timePeriod = "5y" }) |
+    @Html.ActionLink("5 Years", "Details", new { timePeriod = "5y" })
 </div>
 
 <div class="container">

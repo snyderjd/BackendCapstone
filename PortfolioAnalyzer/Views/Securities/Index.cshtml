@@ -11,7 +11,7 @@
         <p>
             Find Security: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
             <input type="submit" value="Search" class="btn btn-secondary" /> |
-            <a asp-action="Index">
+            <a asp-action="Index" class="link-button">
                 <input type="button" class="btn btn-secondary" value="Back to Full List" />
             </a>
         </p>
@@ -52,7 +52,7 @@
                     @Html.DisplayFor(modelItem => item.Ticker)
                 </td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.Id">
+                    <a asp-action="Details" asp-route-id="@item.Id" class="link-button">
                         <input type="button" class="btn btn-secondary" value="Details" />
                     </a>
                 </td>

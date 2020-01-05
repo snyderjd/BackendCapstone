@@ -7,7 +7,7 @@
 <h1>Watchlists</h1>
 
 <p>
-    <a asp-action="Create">
+    <a asp-action="Create" class="link-button">
         <input type="button" class="btn btn-secondary" value="Create New Watchlist" />
     </a>
 </p>
@@ -33,13 +33,13 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">
+                <a asp-action="Edit" asp-route-id="@item.Id" class="link-button">
                     <input type="button" class="btn btn-sm btn-secondary" value="Edit" />
                 </a>
-                <a asp-action="Details" asp-route-id="@item.Id">
+                <a asp-action="Details" asp-route-id="@item.Id" class="link-button">
                     <input type="button" class="btn btn-sm btn-secondary" value="Details" />
                 </a>
-                <a asp-action="Delete" asp-route-id="@item.Id">
+                <a asp-action="Delete" asp-route-id="@item.Id" class="link-button">
                     <input type="button" class="btn btn-sm btn-secondary" value="Delete" />
                 </a>
             </td>

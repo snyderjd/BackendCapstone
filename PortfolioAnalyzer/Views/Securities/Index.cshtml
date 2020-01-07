@@ -10,7 +10,7 @@
     <div class="form-actions no-color">
         <p>
             Find Security: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" />
-            <input type="submit" value="Search" class="btn btn-secondary" /> |
+            <input type="submit" value="Search" class="btn btn-secondary" />
             <a asp-action="Index" class="link-button">
                 <input type="button" class="btn btn-secondary" value="Back to Full List" />
             </a>
@@ -53,7 +53,7 @@
                 </td>
                 <td>
                     <a asp-action="Details" asp-route-id="@item.Id" class="link-button">
-                        <input type="button" class="btn btn-secondary" value="Details" />
+                        <input type="button" class="btn btn-secondary btn-sm" value="Details" />
                     </a>
                 </td>
             </tr>
@@ -70,14 +70,14 @@
 <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex - 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @prevDisabled">
+   class="btn btn-light btn-sm @prevDisabled">
     Previous
 </a>
 
 <a asp-action="Index" asp-route-sortOrder="@ViewData["CurrentSort"]"
    asp-route-pageNumber="@(Model.PageIndex + 1)"
    asp-route-currentFilter="@ViewData["CurrentFilter"]"
-   class="btn btn-default @nextDisabled">
+   class="btn btn-light btn-sm @nextDisabled">
     Next
 </a>
 

@@ -87,7 +87,7 @@ namespace PortfolioAnalyzer.Models.IEXModels
         [JsonPropertyName("ytdChange")]
         public decimal YTDChange { get; set; }
         [JsonPropertyName("peRatio")]
-        public decimal PERatio { get; set; }
+        public decimal? PERatio { get; set; }
         [JsonPropertyName("lastTradeTime")]
         public long LastTradeTime { get; set; }
         [JsonPropertyName("isUSMarketOpen")]

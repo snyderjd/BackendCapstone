@@ -53,33 +53,37 @@
     
 
     <footer class="border-top footer text-muted bg-dark">
-        <!-- TradingView Widget BEGIN -->
-        <div class="tradingview-widget-container">
-            <div class="tradingview-widget-container__widget"></div>
-            <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
-                {
-                    "symbols": [
-                        {
-                            "proName": "OANDA:SPX500USD",
-                            "title": "S&P 500"
-                        },
-                        {
-                            "description": "WTI Crude Oil",
-                            "proName": "TVC:USOIL"
-                        },
-                        {
-                            "description": "Gold",
-                            "proName": "OANDA:XAUUSD"
-                        }
-                    ],
-                        "colorTheme": "dark",
-                            "isTransparent": false,
-                                "displayMode": "adaptive",
-                                    "locale": "en"
-                }
-            </script>
-        </div>
-        <!-- TradingView Widget END -->
+        @if ((string)ViewData["Title"] == "Home Page")
+        {
+            <!-- TradingView Widget BEGIN -->
+            <div class="tradingview-widget-container">
+                <div class="tradingview-widget-container__widget"></div>
+                <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+                    {
+                        "symbols": [
+                            {
+                                "proName": "OANDA:SPX500USD",
+                                "title": "S&P 500"
+                            },
+                            {
+                                "description": "WTI Crude Oil",
+                                "proName": "TVC:USOIL"
+                            },
+                            {
+                                "description": "Gold",
+                                "proName": "OANDA:XAUUSD"
+                            }
+                        ],
+                            "colorTheme": "dark",
+                                "isTransparent": false,
+                                    "displayMode": "adaptive",
+                                        "locale": "en"
+                    }
+                </script>
+            </div>
+            <!-- TradingView Widget END -->
+        }
+
         <div class="container">
             &copy; 2019 - Portfolio Review - <a class="text-light" href="https://iexcloud.io" rel="noopener" target="_blank">Data provided by IEX Cloud</a> |
             <a class="text-light" href="https://www.tradingview.com" rel="noopener" target="_blank">Ticker tape by TradingView</a>

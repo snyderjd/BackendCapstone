@@ -33,6 +33,7 @@ namespace PortfolioAnalyzer.Controllers
         {
             var viewModel = new HomeViewModel();
 
+            // Get top headlines from NewsAPI and put in the viewModel
             viewModel.NewsAPIResult = await GetNewsAPIResult();
 
             if (ticker != null)

@@ -27,10 +27,13 @@ namespace PortfolioAnalyzer.Controllers
             _clientFactory = clientFactory;
         }
         private string GetToken() => _config.GetValue<string>("Tokens:IEXCloudSK");
+        private string GetNewsAPIToken() => _config.GetValue<string>("Tokens:NewsAPI");
 
         public async Task<IActionResult> Index(string ticker)
         {
             var viewModel = new HomeViewModel();
+
+            viewModel.NewsAPIResult = await GetNewsAPIResult();
 
             if (ticker != null)
             {
@@ -72,6 +75,26 @@ namespace PortfolioAnalyzer.Controllers
             }
 
             return quote;
+        }
+
+        private async Task<NewsAPIResult> GetNewsAPIResult()
+        {
+            var newsAPIResult = new NewsAPIResult();
+            var token = GetNewsAPIToken();
+            var client = _clientFactory.CreateClient();
+
+            // Send a request to news API to retrieve news items
+            var request = new HttpRequestMessage(HttpMethod.Get, $"https://newsapi.org/v2/top-headlines?sources=bloomberg,cnbc,business-insider,the-wall-street-journal&apiKey={token}");
+            var response = await client.SendAsync(request);
+
+            if (response.IsSuccessStatusCode)
+            {
+                // Convert the response from news API into List<NewsAPIResult> and return it
+                var json = await response.Content.ReadAsStreamAsync();
+                newsAPIResult = await System.Text.Json.JsonSerializer.DeserializeAsync<NewsAPIResult>(json);
+            }
+
+            return newsAPIResult;
         }
 
         public IActionResult Privacy()

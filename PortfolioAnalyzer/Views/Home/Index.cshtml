@@ -53,4 +53,15 @@
 
 }
 
+<div class="container">
+    <h4>Top Headlines</h4>
+    @foreach (NewsAPIArticle article in Model.NewsAPIResult.Articles)
+    {
+        <a href="@article.Url" rel="noopener" target="_blank">
+            <h6>@article.Title</h6>
+        </a>
+        
+    }
+</div>
+
     
